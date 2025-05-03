@@ -1,21 +1,26 @@
 package models;
 
+import java.util.List;
 
 public class Commande {
+	
+	//etat de commande 
+	public enum EtatCommande {NON_TRAITEE , EN_PREPARATION , PRETE ,EN_ROUTE } 
+	 //Commande à livrer à domicile , Commande sur place,Commande à importer
+	public enum TypeCommande { LIVRAISON, SUR_PLACE , A_IMPORTER }
 
+	private String id;
+	private Client client ;
+	private EtatCommande etat_commande ;
+	private TypeCommande type_commande ; 
+	private List<Produit> produits ; // what is there in the command
 	
-	private String id ; 
-	private String client_id ;
-	private String etat_commande ;
-	private String nom_commande ; 
-	private String type_commande ;  //Commande à livrer à domicile , Commande sur place,Commande à importer
-	
-	public Commande(  String id , String client_id , String etat_commande , String nom_commande , String type_commande   ) {
+	public Commande(  String id , Client client , EtatCommande etat_commande ,  TypeCommande type_commande  ,List<Produit> produits) {
 		this.id= id ;
-		this.client_id = client_id;
+		this.client = client;
 		this.etat_commande = etat_commande;
-		this.nom_commande = nom_commande;
 		this.type_commande = type_commande;
+		this.produits = produits ;
 	}
 
 	public String getId() {
@@ -26,37 +31,39 @@ public class Commande {
 		this.id = id;
 	}
 
-	public String getClient_id() {
-		return client_id;
+	public Client getClient() {
+		return client;
 	}
 
-	public void setClient_id(String client_id) {
-		this.client_id = client_id;
+	public void setClient(Client client) {
+		this.client = client;
 	}
 
-	public String getEtat_commande() {
+	public EtatCommande getEtat_commande() {
 		return etat_commande;
 	}
 
-	public void setEtat_commande(String etat_commande) {
+	public void setEtat_commande(EtatCommande etat_commande) {
 		this.etat_commande = etat_commande;
 	}
 
-	public String getNom_commande() {
-		return nom_commande;
-	}
-
-	public void setNom_commande(String nom_commande) {
-		this.nom_commande = nom_commande;
-	}
-
-	public String getType_commande() {
+	public TypeCommande getType_commande() {
 		return type_commande;
 	}
 
-	public void setType_commande(String type_commande) {
+	public void setType_commande(TypeCommande type_commande) {
 		this.type_commande = type_commande;
 	}
+
+	public List<Produit> getProduits() {
+		return produits;
+	}
+
+	public void setProduits(List<Produit> produits) {
+		this.produits = produits;
+	}
+
+
 
 	
 	
