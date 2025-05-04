@@ -6,6 +6,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="C:/Users/hp/.m2/repository/org/mongodb/mongodb-driver-sync/5.2.1/mongodb-driver-sync-5.2.1.jar" sourcepath="C:/Users/hp/.m2/repository/org/mongodb/mongodb-driver-sync/5.2.1/mongodb-driver-sync-5.2.1-sources.jar">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
@@ -25,5 +26,12 @@
 			<attribute name="maven.scope" value="compile"/>
 		</attributes>
 	</classpathentry>
+=======
+	<classpathentry kind="lib" path="D:/softwares/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+>>>>>>> 3293d34baa61d196dd1413f0f7af3a368d5ab1e5
 	<classpathentry kind="output" path="bin"/>
 </classpath>
