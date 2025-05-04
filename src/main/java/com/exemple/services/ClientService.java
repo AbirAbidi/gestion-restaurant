@@ -1,14 +1,36 @@
-package main.java.services;
+package com.exemple.services;
 
-import main.java.models.Client;
-import main.java.models.Commande;
-import main.java.models.Menu;
+
+import com.exemple.models.Client;
+import com.exemple.models.Menu;
+import com.exemple.models.Commande;
+import com.exemple.models.Produit;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+
 
 public class ClientService {
 
-	
-	public void creerClient (Client c) {
-		//
+	private final MongoDatabase database;
+	public ClientService(MongoDatabase database) {
+		this.database = database;
+	}
+
+
+	public void creerClient(Client c) {
+		MongoCollection<Document> collection = database.getCollection("clients");
+
+		Document doc = new Document("id", c.getId())
+				.append("name", c.getName())
+				.append("lastName", c.getLastName())
+				.append("dateNaissance", c.getDate_de_naissance())
+				.append("email", c.getEmail())
+				.append("adresse", c.getAdresse())
+				.append("password", c.getPassword());
+
+		collection.insertOne(doc);
+		System.out.println("Client ajouté dans MongoDB !");
 	}
 	
 	public void modifierInfo(Client c) {}

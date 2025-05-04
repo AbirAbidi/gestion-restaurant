@@ -1,10 +1,12 @@
-package main.java.services;
+package com.exemple.services;
+
+import com.exemple.models.Client;
+import com.exemple.models.Commande;
+import com.exemple.models.Produit;
 
 import java.util.List;
 
-import main.java.models.Client;
-import main.java.models.Commande;
-import main.java.models.Produit; 
+
 
 
 public class GerantService {

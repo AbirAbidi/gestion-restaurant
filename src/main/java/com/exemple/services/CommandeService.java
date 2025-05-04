@@ -1,6 +1,7 @@
-package main.java.services;
+package com.exemple.services;
 
-import main.java.models.Commande;
+
+import com.exemple.models.Commande;
 
 public class CommandeService {
 	

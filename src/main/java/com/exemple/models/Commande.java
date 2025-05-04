@@ -1,4 +1,4 @@
-package main.java.models;
+package com.exemple.models;
 
 import java.util.List;
 
