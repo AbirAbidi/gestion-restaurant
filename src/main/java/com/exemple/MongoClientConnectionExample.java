@@ -1,5 +1,4 @@
-package main.java.entry;
-
+package com.exemple;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
