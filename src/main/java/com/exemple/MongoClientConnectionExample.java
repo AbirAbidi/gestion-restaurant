@@ -48,6 +48,7 @@ public class MongoClientConnectionExample {
                 Produit p = new Produit("123", "dro3", "what khairi eats", 20, "plat");
                 gerantservice.AjoutProduit(p);
                 */
+                clientservice.consulterMenu() ;
 
 
             } catch (MongoException e) {

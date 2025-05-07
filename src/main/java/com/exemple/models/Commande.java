@@ -9,27 +9,19 @@ public class Commande {
 	 //Commande à livrer à domicile , Commande sur place,Commande à importer
 	public enum TypeCommande { LIVRAISON, SUR_PLACE , A_IMPORTER }
 
-	private String id;
 	private Client client ;
 	private EtatCommande etat_commande ;
 	private TypeCommande type_commande ; 
 	private List<Produit> produits ; // what is there in the command
 	
-	public Commande(  String id , Client client , EtatCommande etat_commande ,  TypeCommande type_commande  ,List<Produit> produits) {
-		this.id= id ;
+	public Commande(  Client client , EtatCommande etat_commande ,  TypeCommande type_commande  ,List<Produit> produits) {
 		this.client = client;
 		this.etat_commande = etat_commande;
 		this.type_commande = type_commande;
 		this.produits = produits ;
 	}
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public Client getClient() {
 		return client;

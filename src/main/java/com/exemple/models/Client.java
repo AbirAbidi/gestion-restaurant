@@ -4,7 +4,6 @@ import java.util.Date;
 
 public class Client {
 	
-	private String id;
 	private String name;
 	private String LastName;
 	private Date date_de_naissance;
@@ -13,8 +12,7 @@ public class Client {
 	private String password;
 	
 	
-	public Client( String id,String name,String LastName,Date date_de_naissance,String Email ,String adresse, String password ) {
-		this.id= id ;
+	public Client( String name,String LastName,Date date_de_naissance,String Email ,String adresse, String password ) {
 		this.name = name;
 		this.LastName = LastName;
 		this.date_de_naissance = date_de_naissance;
@@ -24,14 +22,7 @@ public class Client {
 	}
 
 
-	public String getId() {
-		return id;
-	}
 
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 
 	public String getName() {

@@ -9,6 +9,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ClientService {
 
@@ -41,10 +44,12 @@ public class ClientService {
 		System.out.println("Client modifié dans MongoDB !");
 	}
 	
-	public FindIterable<Document> consulterMenu() {
-		MongoCollection<Document> collection = database.getCollection("Menu");
+	public void consulterMenu() {
+		MongoCollection<Document> collection = database.getCollection("produits");
 		FindIterable<Document> findIterable = collection.find(new Document());
-return findIterable ;
+		List<Document> results = new ArrayList<>() ;
+		findIterable.into(results) ;
+		System.out.println(results);
 	}
 	
 	public void changerMp (Client c , String nouvelleMp) {

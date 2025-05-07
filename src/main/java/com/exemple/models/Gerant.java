@@ -4,7 +4,6 @@ import java.util.Date;
 
 public class Gerant {
 	
-	private String id;
 	private String name;
 	private String LastName;
 	private Date date_de_naissance;
@@ -13,8 +12,7 @@ public class Gerant {
 	private String password;
 	
 	
-	public Gerant( String id,String name,String LastName,Date date_de_naissance,String Email ,String adresse, String password ) {
-		this.id= id ;
+	public Gerant( String name,String LastName,Date date_de_naissance,String Email ,String adresse, String password ) {
 		this.name = name;
 		this.LastName = LastName;
 		this.date_de_naissance = date_de_naissance;
@@ -24,14 +22,6 @@ public class Gerant {
 	}
 
 
-	public String getId() {
-		return id;
-	}
-
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 
 	public String getName() {
