@@ -47,8 +47,12 @@ public class MongoClientConnectionExample {
                 service.modifierInfo(c,"abir");
                 Produit p = new Produit("123", "dro3", "what khairi eats", 20, "plat");
                 gerantservice.AjoutProduit(p);
+                 clientservice.consulterMenu() ;
+                 clientservice.changerMp("6817976d4e41c60a88ecf7ad","new");
+
                 */
-                clientservice.consulterMenu() ;
+                gerantservice.consulterLclients();
+
 
 
             } catch (MongoException e) {

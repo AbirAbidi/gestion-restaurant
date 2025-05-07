@@ -4,6 +4,7 @@ import com.exemple.models.Client;
 import com.exemple.models.Commande;
 import com.exemple.models.Produit;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
@@ -26,7 +27,7 @@ public class GerantService {
 	public void AjoutProduit(Produit p) {
 		MongoCollection<Document> collection = database.getCollection("produits");
 
-		Document doc = new Document("id", p.getId())
+		Document doc = new Document()
 				.append("name", p.getName())
 				.append("description", p.getDescription())
 				.append("prix", p.getPrix())
@@ -36,8 +37,17 @@ public class GerantService {
 		System.out.println("Produit ajouté dans MongoDB !");
 	}
 
-	public List<Client> consulterLclients () {
-		return null ;
+	public void consulterLclients () {
+		MongoCollection<Document> collection = database.getCollection("clients");
+		MongoCursor<Document> cursor = collection.find().iterator();
+		try {
+			while
+			(cursor.hasNext()) {
+				System.out.println(cursor.next());
+			}
+		}finally {
+			cursor.close();
+		}
 	}
 
 	public void supprimerClient(Client c) {}
