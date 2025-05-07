@@ -1,8 +1,8 @@
-package com.exemple.services;
+package services;
 
 
-import com.exemple.models.Client;
-import com.exemple.models.Commande;
+import models.Client;
+import models.Commande;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;

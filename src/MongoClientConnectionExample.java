@@ -1,18 +1,11 @@
-package com.exemple;
 
-import com.exemple.models.Client;
-import com.exemple.models.Produit;
-import com.exemple.services.ClientService;
-import com.exemple.services.GerantService;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoException;
-import com.mongodb.ServerApi;
-import com.mongodb.ServerApiVersion;
+import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import services.ClientService;
+import services.GerantService;
 
 import java.util.Date;
 

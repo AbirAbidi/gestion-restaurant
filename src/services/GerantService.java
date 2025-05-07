@@ -1,8 +1,8 @@
-package com.exemple.services;
+package services;
 
-import com.exemple.models.Client;
-import com.exemple.models.Commande;
-import com.exemple.models.Produit;
+import models.Client;
+import models.Commande;
+import models.Produit;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;

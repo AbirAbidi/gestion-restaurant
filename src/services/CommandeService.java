@@ -1,7 +1,7 @@
-package com.exemple.services;
+package services;
 
 
-import com.exemple.models.Commande;
+import models.Commande;
 
 public class CommandeService {
 	
