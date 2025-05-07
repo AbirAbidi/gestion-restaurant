@@ -72,8 +72,6 @@ public class ClientService {
 		}
 	}
 
-
-	
 	public void changerMp (String id,String nouvelleMp) {
 		MongoCollection<Document> collection = database.getCollection("clients");
 		//filters used to filter and Updates to find the updating field ( they re queries like)
@@ -81,8 +79,17 @@ public class ClientService {
 		System.out.println("Client modifié son mp dans MongoDB !");
 	}
 	
-	public void passerCommande(Client c , Commande cm) {
-		
+	public void passerCommande(Commande cm) {
+		MongoCollection<Document> collection = database.getCollection("commandes");
+		Document doc = new Document()
+				.append("client", cm.getClient())
+				.append("EtatCommande",cm.getEtat_commande())
+				.append("TypeCommande",cm.getType_commande())
+				.append("produits",cm.getProduits());
+
+		collection.insertOne(doc);
+		System.out.println("Client passe commande dans MongoDB !");
+
 	}
 	
 	

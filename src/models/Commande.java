@@ -9,26 +9,26 @@ public class Commande {
 	 //Commande à livrer à domicile , Commande sur place,Commande à importer
 	public enum TypeCommande { LIVRAISON, SUR_PLACE , A_IMPORTER }
 
-	private Client client ;
+	private String id_client ;
 	private EtatCommande etat_commande ;
 	private TypeCommande type_commande ; 
-	private List<Produit> produits ; // what is there in the command
+	private List<String> produits ; // what is there in the command
 	
-	public Commande(  Client client , EtatCommande etat_commande ,  TypeCommande type_commande  ,List<Produit> produits) {
-		this.client = client;
-		this.etat_commande = etat_commande;
+	public Commande(  String id_client , EtatCommande etat_commande ,  TypeCommande type_commande  ,List<String> produits) {
+		this.id_client = id_client;
+		this.etat_commande = EtatCommande.NON_TRAITEE;
 		this.type_commande = type_commande;
 		this.produits = produits ;
 	}
 
 
 
-	public Client getClient() {
-		return client;
+	public String getClient() {
+		return id_client;
 	}
 
-	public void setClient(Client client) {
-		this.client = client;
+	public void setClient(String id_client) {
+		this.id_client = id_client;
 	}
 
 	public EtatCommande getEtat_commande() {
@@ -47,11 +47,11 @@ public class Commande {
 		this.type_commande = type_commande;
 	}
 
-	public List<Produit> getProduits() {
+	public List<String> getProduits() {
 		return produits;
 	}
 
-	public void setProduits(List<Produit> produits) {
+	public void setProduits(List<String> produits) {
 		this.produits = produits;
 	}
 

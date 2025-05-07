@@ -3,10 +3,12 @@ import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import models.Commande;
 import org.bson.Document;
 import services.ClientService;
 import services.GerantService;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MongoClientConnectionExample {
@@ -42,9 +44,15 @@ public class MongoClientConnectionExample {
                 gerantservice.AjoutProduit(p);
                  clientservice.consulterMenu() ;
                  clientservice.changerMp("6817976d4e41c60a88ecf7ad","new");
+                  gerantservice.consulterLclients();
+                  gerantservice.supprimerClient("681b921f3393df10ec36dd87");
 
                 */
-                gerantservice.consulterLclients();
+                ArrayList<String> pr = new ArrayList<>();
+                pr.add("patte");
+                pr.add("salade");
+                Commande cm = new Commande("6817976d4e41c60a88ecf7ad", Commande.EtatCommande.NON_TRAITEE,Commande.TypeCommande.SUR_PLACE ,pr);
+                clientservice.passerCommande(cm);
 
 
 

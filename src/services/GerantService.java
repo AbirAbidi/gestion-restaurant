@@ -1,5 +1,6 @@
 package services;
 
+import com.mongodb.client.model.Filters;
 import models.Client;
 import models.Commande;
 import models.Produit;
@@ -7,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.List;
 
@@ -50,9 +52,17 @@ public class GerantService {
 		}
 	}
 
-	public void supprimerClient(Client c) {}
+	public void supprimerClient(String id) {
+		MongoCollection<Document> collection = database.getCollection("clients");
+		collection.deleteOne(Filters.eq("_id", new ObjectId(id)));
+		System.out.println("Client supprimé !");
+	}
 
-	public void supprimerPrdouit(Produit p) {}
+	public void supprimerPrdouit(String id) {
+		MongoCollection<Document> collection = database.getCollection("produits");
+		collection.deleteOne(Filters.eq("_id", new ObjectId(id)));
+		System.out.println("produit supprimé !");
+	}
 	
 	public void modifierProduit(Produit p) {}
 	
