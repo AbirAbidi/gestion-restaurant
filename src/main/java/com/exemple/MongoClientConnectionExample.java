@@ -1,7 +1,9 @@
 package com.exemple;
 
 import com.exemple.models.Client;
+import com.exemple.models.Produit;
 import com.exemple.services.ClientService;
+import com.exemple.services.GerantService;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoException;
@@ -35,9 +37,19 @@ public class MongoClientConnectionExample {
                 database.runCommand(new Document("ping", 1));
                 System.out.println("Pinged your deployment. You successfully connected to MongoDB!");
 
-                Client c = new Client("123", "Ali", "Ben Ali", new Date(), "ali@email.com", "Tunis", "azerty");
-                ClientService service = new ClientService(database);
-                service.creerClient(c);
+                ClientService clientservice = new ClientService(database);
+                GerantService gerantservice = new GerantService(database);
+                // test zone
+
+
+                /*Client c = new Client("123", "Ali", "Ben Ali", new Date(), "ali@email.com", "Tunis", "azerty");
+                //service.creerClient(c);
+                service.modifierInfo(c,"abir");
+                Produit p = new Produit("123", "dro3", "what khairi eats", 20, "plat");
+                gerantservice.AjoutProduit(p);
+                */
+
+
             } catch (MongoException e) {
                 e.printStackTrace();
             }

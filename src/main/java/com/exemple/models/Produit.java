@@ -7,11 +7,11 @@ public class Produit {
 	private String id ;
 	private String name ; 
 	private String description ;
-	private BigDecimal prix ; // this is better for price storage better than float  or double used in financial calculus
+	private double prix ;
 	private String type ;  // plat, un sandwich, une salade, un dessert, une viennoiserie, une boisson… 
 	
 	
-	public Produit(  String id , String name , String description , BigDecimal prix , String type   ) {
+	public Produit(  String id , String name , String description , double prix , String type   ) {
 		this.id= id ;
 		this.name = name;
 		this.description = description;
@@ -50,12 +50,12 @@ public class Produit {
 	}
 
 
-	public BigDecimal getPrix() {
+	public double getPrix() {
 		return prix;
 	}
 
 
-	public void setPrix(BigDecimal prix) {
+	public void setPrix(double prix) {
 		this.prix = prix;
 	}
 

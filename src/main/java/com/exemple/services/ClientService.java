@@ -2,11 +2,11 @@ package com.exemple.services;
 
 
 import com.exemple.models.Client;
-import com.exemple.models.Menu;
 import com.exemple.models.Commande;
-import com.exemple.models.Produit;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
 
@@ -32,12 +32,19 @@ public class ClientService {
 		collection.insertOne(doc);
 		System.out.println("Client ajouté dans MongoDB !");
 	}
-	
-	public void modifierInfo(Client c) {}
-	
-	public Menu consulterMenu() {
-		return null ;
 
+	//only changes the name till now
+	public void modifierInfo(Client c , String name) {
+		MongoCollection<Document> collection = database.getCollection("clients");
+
+		collection.updateOne(Filters.eq(("name"), c.getName()), new Document("$set", new Document("name", name)));
+		System.out.println("Client modifié dans MongoDB !");
+	}
+	
+	public FindIterable<Document> consulterMenu() {
+		MongoCollection<Document> collection = database.getCollection("Menu");
+		FindIterable<Document> findIterable = collection.find(new Document());
+return findIterable ;
 	}
 	
 	public void changerMp (Client c , String nouvelleMp) {

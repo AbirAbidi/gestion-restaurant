@@ -3,6 +3,9 @@ package com.exemple.services;
 import com.exemple.models.Client;
 import com.exemple.models.Commande;
 import com.exemple.models.Produit;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 
 import java.util.List;
 
@@ -10,15 +13,35 @@ import java.util.List;
 
 
 public class GerantService {
+
+
+	private final MongoDatabase database;
+	public GerantService(MongoDatabase database) {
+		this.database = database;
+	}
+
+
+
 	
+	public void AjoutProduit(Produit p) {
+		MongoCollection<Document> collection = database.getCollection("produits");
+
+		Document doc = new Document("id", p.getId())
+				.append("name", p.getName())
+				.append("description", p.getDescription())
+				.append("prix", p.getPrix())
+				.append("type", p.getType());
+
+		collection.insertOne(doc);
+		System.out.println("Produit ajouté dans MongoDB !");
+	}
+
 	public List<Client> consulterLclients () {
-		return null ; 
+		return null ;
 	}
 
 	public void supprimerClient(Client c) {}
-	
-	public void AjoutProduit(Produit p) {}
-	
+
 	public void supprimerPrdouit(Produit p) {}
 	
 	public void modifierProduit(Produit p) {}
