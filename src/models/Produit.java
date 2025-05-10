@@ -1,9 +1,13 @@
 package models;
 
+import org.bson.types.ObjectId;
+
 import java.math.BigDecimal;
 
 public class Produit {
 
+
+	private ObjectId id;
 	private String name ;
 	private String description ;
 	private double prix ;
@@ -19,7 +23,13 @@ public class Produit {
 
 
 
+	public ObjectId getId() {
+		return id;
+	}
 
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;

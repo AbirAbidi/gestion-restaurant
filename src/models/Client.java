@@ -1,9 +1,13 @@
 package models;
 
+import org.bson.types.ObjectId;
+
 import java.util.Date;
 
 public class Client {
-	
+
+
+	private ObjectId id;
 	private String name;
 	private String LastName;
 	private Date date_de_naissance;
@@ -22,7 +26,13 @@ public class Client {
 	}
 
 
+	public ObjectId getId() {
+		return id;
+	}
 
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
 
 
 	public String getName() {

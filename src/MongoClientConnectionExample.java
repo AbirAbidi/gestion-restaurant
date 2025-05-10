@@ -46,14 +46,14 @@ public class MongoClientConnectionExample {
                  clientservice.changerMp("6817976d4e41c60a88ecf7ad","new");
                   gerantservice.consulterLclients();
                   gerantservice.supprimerClient("681b921f3393df10ec36dd87");
-
-                */
                 ArrayList<String> pr = new ArrayList<>();
                 pr.add("patte");
                 pr.add("salade");
                 Commande cm = new Commande("6817976d4e41c60a88ecf7ad", Commande.EtatCommande.NON_TRAITEE,Commande.TypeCommande.SUR_PLACE ,pr);
                 clientservice.passerCommande(cm);
+                */
 
+                gerantservice.afficherCommandeClient();
 
 
             } catch (MongoException e) {

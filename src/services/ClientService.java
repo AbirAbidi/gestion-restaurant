@@ -10,9 +10,11 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,11 +42,17 @@ public class ClientService {
 		System.out.println("Client ajouté dans MongoDB !");
 	}
 
-	//only changes the name till now
-	public void modifierInfo(Client c , String name) {
+	public void modifierInfo(Client c ,String name, String LastName, Date date_de_naissance, String Email , String adresse, String password ) {
 		MongoCollection<Document> collection = database.getCollection("clients");
 
-		collection.updateOne(Filters.eq(("name"), c.getName()), Updates.set("name", name));
+		Bson filter = Filters.eq("_id", c.getId()); //
+
+		if (name != null) collection.updateOne(filter, Updates.set("name", name));
+		if (LastName != null) collection.updateOne(filter, Updates.set("lastName", LastName));
+		if (date_de_naissance != null) collection.updateOne(filter, Updates.set("dateNaissance", date_de_naissance));
+		if (Email != null) collection.updateOne(filter, Updates.set("email", Email));
+		if (adresse != null) collection.updateOne(filter, Updates.set("adresse", adresse));
+		if (password != null) collection.updateOne(filter, Updates.set("password", password));
 		System.out.println("Client modifié dans MongoDB !");
 	}
 	
