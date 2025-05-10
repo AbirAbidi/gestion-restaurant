@@ -51,9 +51,12 @@ public class MongoClientConnectionExample {
                 pr.add("salade");
                 Commande cm = new Commande("6817976d4e41c60a88ecf7ad", Commande.EtatCommande.NON_TRAITEE,Commande.TypeCommande.SUR_PLACE ,pr);
                 clientservice.passerCommande(cm);
-                */
 
                 gerantservice.afficherCommandeClient();
+                                Commande.EtatCommande etat = clientservice.SuivieCommande("681ba53f96cef7529a481860");
+                System.out.println("État de la commande : " + etat);
+                */
+
 
 
             } catch (MongoException e) {

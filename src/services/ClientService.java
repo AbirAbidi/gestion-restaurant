@@ -90,7 +90,7 @@ public class ClientService {
 	public void passerCommande(Commande cm) {
 		MongoCollection<Document> collection = database.getCollection("commandes");
 		Document doc = new Document()
-				.append("client", cm.getClient())
+				.append("client", cm.getId_client())
 				.append("EtatCommande",cm.getEtat_commande())
 				.append("TypeCommande",cm.getType_commande())
 				.append("produits",cm.getProduits());
@@ -99,21 +99,43 @@ public class ClientService {
 		System.out.println("Client passe commande dans MongoDB !");
 
 	}
-	
-	
-	///idk m gonna link em 
-	public String TypeCommande (Commande c) {
-		return null ;
-	} 
-	
-	public void modifierCommande (Commande c ) {}
 
-	public void supprimerCommande (Commande c ) {}
-	
-	public String SuivieCommande (Commande c ) {
-		return null ; // return etat commande 
+	public void modifierCommande (Commande c , Commande.EtatCommande etat_commande , Commande.TypeCommande type_commande  , List<String> produits) {
+		MongoCollection<Document> collection = database.getCollection("commandes");
+		Bson filter = Filters.eq("_id", c.getId());
+
+		if (etat_commande != null) collection.updateOne(filter, Updates.set("EtatCommande", etat_commande));
+		if (type_commande != null) collection.updateOne(filter, Updates.set("TypeCommande", type_commande));
+		if (produits != null) collection.updateOne(filter, Updates.set("produits", produits));
+
+	}
+
+	public void supprimerCommande (String id) {
+		MongoCollection<Document> collection = database.getCollection("commandes");
+		collection.deleteOne(Filters.eq("_id", new ObjectId(id)));
+		System.out.println("commande supprimée dans MongoDB !");
+
+	}
+
+	public Commande.EtatCommande SuivieCommande(String id) {
+		MongoCollection<Document> collection = database.getCollection("commandes");
+		Bson filter = Filters.eq("_id", new ObjectId(id));
+
+		Document doc = collection.find(filter).first();
+
+		if (doc != null) {
+			String etatStr = doc.getString("EtatCommande");
+			if (etatStr != null) {
+				return Commande.EtatCommande.valueOf(etatStr);
+			}
+		}
+
+		return null;
 	}
 
 
-	
+
+
+
+
 }

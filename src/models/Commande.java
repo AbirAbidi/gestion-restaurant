@@ -1,5 +1,7 @@
 package models;
 
+import org.bson.types.ObjectId;
+
 import java.util.List;
 
 public class Commande {
@@ -9,6 +11,7 @@ public class Commande {
 	 //Commande à livrer à domicile , Commande sur place,Commande à importer
 	public enum TypeCommande { LIVRAISON, SUR_PLACE , A_IMPORTER }
 
+	private ObjectId id;
 	private String id_client ;
 	private EtatCommande etat_commande ;
 	private TypeCommande type_commande ; 
@@ -21,13 +24,19 @@ public class Commande {
 		this.produits = produits ;
 	}
 
+	public ObjectId getId() {
+		return id;
+	}
 
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
 
-	public String getClient() {
+	public String getId_client() {
 		return id_client;
 	}
 
-	public void setClient(String id_client) {
+	public void setId_client(String id_client) {
 		this.id_client = id_client;
 	}
 
