@@ -12,7 +12,8 @@ import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
-
+import com.mongodb.client.model.Filters;
+import org.bson.conversions.Bson;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,8 +57,9 @@ public class ClientService {
 		System.out.println("Client modifié dans MongoDB !");
 	}
 	
-	public void consulterMenu() {
+	public List<String> consulterMenu() {
 		MongoCollection<Document> collection = database.getCollection("produits");
+		List<String> produits = new ArrayList<>();
 		/* in this we can either use
 		findIterate<Document> findIterable = collection.find(new Document());
 		then put finditerate in a list and print it but its only adviced for small amount of data (which can be the case ) cuz we wont have a thousand item in the menu
@@ -78,7 +80,9 @@ public class ClientService {
 		}finally {
 			cursor.close();
 		}
-	}
+        return produits;
+    }
+
 
 	public void changerMp (String id,String nouvelleMp) {
 		MongoCollection<Document> collection = database.getCollection("clients");
@@ -131,6 +135,22 @@ public class ClientService {
 		}
 
 		return null;
+	}
+	// À ajouter dans la classe ClientService
+	public boolean authentifierClient(String email, String password) {
+		MongoCollection<Document> collection = database.getCollection("clients");
+
+		// Créer un filtre pour rechercher un client avec cet email et mot de passe
+		Bson filter = Filters.and(
+				Filters.eq("email", email),
+				Filters.eq("password", password)
+		);
+
+		// Chercher un document qui correspond
+		Document clientDoc = collection.find(filter).first();
+
+		// Si un document est trouvé, l'authentification est réussie
+		return clientDoc != null;
 	}
 
 
