@@ -17,7 +17,8 @@ public class Commande {
 	private TypeCommande type_commande ; 
 	private List<String> produits ; // what is there in the command
 	
-	public Commande(  String id_client , EtatCommande etat_commande ,  TypeCommande type_commande  ,List<String> produits) {
+	public Commande(  ObjectId id , String id_client , EtatCommande etat_commande ,  TypeCommande type_commande  ,List<String> produits) {
+		this.id = id;
 		this.id_client = id_client;
 		this.etat_commande = EtatCommande.NON_TRAITEE;
 		this.type_commande = type_commande;

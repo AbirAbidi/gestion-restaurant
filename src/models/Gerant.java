@@ -1,18 +1,23 @@
 package models;
 
+import org.bson.types.ObjectId;
+
 import java.util.Date;
 
 public class Gerant {
-	
+
+	private ObjectId id;
 	private String name;
 	private String LastName;
 	private Date date_de_naissance;
 	private String Email ;
 	private String adresse;
 	private String password;
-	
-	
-	public Gerant( String name,String LastName,Date date_de_naissance,String Email ,String adresse, String password ) {
+
+
+
+	public Gerant(ObjectId id , String name, String LastName, Date date_de_naissance, String Email , String adresse, String password ) {
+		this.id = id ;
 		this.name = name;
 		this.LastName = LastName;
 		this.date_de_naissance = date_de_naissance;
@@ -22,6 +27,13 @@ public class Gerant {
 	}
 
 
+	public ObjectId getId() {
+		return id;
+	}
+
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
 
 
 	public String getName() {

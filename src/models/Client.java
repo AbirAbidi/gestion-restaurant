@@ -16,7 +16,8 @@ public class Client {
 	private String password;
 	
 	
-	public Client( String name,String LastName,Date date_de_naissance,String Email ,String adresse, String password ) {
+	public Client( ObjectId id , String name,String LastName,Date date_de_naissance,String Email ,String adresse, String password ) {
+		this.id = id ;
 		this.name = name;
 		this.LastName = LastName;
 		this.date_de_naissance = date_de_naissance;

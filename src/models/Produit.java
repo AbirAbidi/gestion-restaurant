@@ -14,7 +14,8 @@ public class Produit {
 	private String type ;  // plat, un sandwich, une salade, un dessert, une viennoiserie, une boisson… 
 	
 	
-	public Produit(  String name , String description , double prix , String type   ) {
+	public Produit(  ObjectId id ,String name , String description , double prix , String type   ) {
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.prix = prix;

@@ -44,7 +44,6 @@ public class Main {
                 //gerantservice.consulterLclients();
 
 
-
             } catch (MongoException e) {
                 e.printStackTrace();
             }
