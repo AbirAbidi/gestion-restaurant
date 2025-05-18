@@ -1,6 +1,9 @@
 package interfaces.client;
+import com.mongodb.client.MongoDatabase;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
+import services.ClientService;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,10 +12,13 @@ public class ClientLoginView extends JFrame {
     private JPasswordField passwordField;
     private JButton loginButton;
     private JButton registerButton;
+    private ClientService clientService;
+    private static MongoDatabase database;
 
+    public ClientLoginView(MongoDatabase database){
 
-    public ClientLoginView() {
-        // Configuration de base
+        ClientLoginView.database = database ;
+        this.clientService = new ClientService(database);
         setTitle("Connexion Client");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -52,8 +58,10 @@ public class ClientLoginView extends JFrame {
         // Vérification simple
         if (emailField.getText().isEmpty() || passwordField.getPassword().length == 0) {
             JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs");
-        } else {
+        } else if(clientService.signin(emailField.getText().trim(),passwordField.getText())){
             JOptionPane.showMessageDialog(this, "Connexion réussie (simulation)");
+            CommandeView commandeView = new CommandeView();
+            commandeView.setVisible(true);
         }
     });
         registerButton.addActionListener(e -> ouvrirInscription());
@@ -67,8 +75,8 @@ public class ClientLoginView extends JFrame {
 }
     private void ouvrirInscription() {
         // Créer et afficher la vue d'inscription
-        RegisterView registerView = new RegisterView();
-        registerView.setVisible(true);
+        /*RegisterView registerView = new RegisterView();
+        registerView.setVisible(true);*/
 
         // Fermer la fenêtre de connexion
         this.dispose();

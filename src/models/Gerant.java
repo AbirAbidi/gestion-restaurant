@@ -13,17 +13,18 @@ public class Gerant {
 	private String Email ;
 	private String adresse;
 	private String password;
+	final String role;
 
 
 
-	public Gerant(ObjectId id , String name, String LastName, Date date_de_naissance, String Email , String adresse, String password ) {
-		this.id = id ;
+	public Gerant(String name, String LastName, Date date_de_naissance, String Email , String adresse, String password ) {
 		this.name = name;
 		this.LastName = LastName;
 		this.date_de_naissance = date_de_naissance;
 		this.adresse = adresse;
 		this.password = password;
 		this.Email = Email ;
+		this.role = "Gerant";
 	}
 
 

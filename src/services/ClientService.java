@@ -18,6 +18,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
+
 
 public class ClientService {
 
@@ -45,7 +48,7 @@ public class ClientService {
 	public void modifierInfo(Client c ,String name, String LastName, Date date_de_naissance, String Email , String adresse, String password ) {
 		MongoCollection<Document> collection = database.getCollection("clients");
 
-		Bson filter = Filters.eq("_id", c.getId()); //
+		Bson filter = eq("_id", c.getId()); //
 
 		if (name != null) collection.updateOne(filter, Updates.set("name", name));
 		if (LastName != null) collection.updateOne(filter, Updates.set("lastName", LastName));
@@ -83,7 +86,7 @@ public class ClientService {
 	public void changerMp (String id,String nouvelleMp) {
 		MongoCollection<Document> collection = database.getCollection("clients");
 		//filters used to filter and Updates to find the updating field ( they re queries like)
-		collection.updateOne(Filters.eq(("_id"), new ObjectId(id)), Updates.set("password", nouvelleMp));
+		collection.updateOne(eq(("_id"), new ObjectId(id)), Updates.set("password", nouvelleMp));
 		System.out.println("Client modifié son mp dans MongoDB !");
 	}
 	
@@ -102,7 +105,7 @@ public class ClientService {
 
 	public void modifierCommande (Commande c , Commande.EtatCommande etat_commande , Commande.TypeCommande type_commande  , List<String> produits) {
 		MongoCollection<Document> collection = database.getCollection("commandes");
-		Bson filter = Filters.eq("_id", c.getId());
+		Bson filter = eq("_id", c.getId());
 
 		if (etat_commande != null) collection.updateOne(filter, Updates.set("EtatCommande", etat_commande));
 		if (type_commande != null) collection.updateOne(filter, Updates.set("TypeCommande", type_commande));
@@ -112,14 +115,14 @@ public class ClientService {
 
 	public void supprimerCommande (String id) {
 		MongoCollection<Document> collection = database.getCollection("commandes");
-		collection.deleteOne(Filters.eq("_id", new ObjectId(id)));
+		collection.deleteOne(eq("_id", new ObjectId(id)));
 		System.out.println("commande supprimée dans MongoDB !");
 
 	}
 
 	public Commande.EtatCommande SuivieCommande(String id) {
 		MongoCollection<Document> collection = database.getCollection("commandes");
-		Bson filter = Filters.eq("_id", new ObjectId(id));
+		Bson filter = eq("_id", new ObjectId(id));
 
 		Document doc = collection.find(filter).first();
 
@@ -133,6 +136,16 @@ public class ClientService {
 		return null;
 	}
 
+	public boolean signin(String email, String password) {
+		MongoCollection<Document> collection = database.getCollection("clients");
+		Document client = collection.find(and(eq("email", email), eq("password", password))).first();
+
+		if (client != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 
 

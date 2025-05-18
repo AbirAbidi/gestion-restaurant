@@ -65,8 +65,8 @@ public class MenuView extends JFrame {
                 panierButton.addActionListener(e -> ouvrirPanier());
 
         retourButton.addActionListener(e -> {
-            ClientLoginView loginView = new ClientLoginView();
-            loginView.setVisible(true);
+           /* ClientLoginView loginView = new ClientLoginView();
+            loginView.setVisible(true);*/
             dispose();
         });
 

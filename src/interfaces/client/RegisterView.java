@@ -1,9 +1,19 @@
 package interfaces.client;
+import com.mongodb.client.MongoDatabase;
+import interfaces.Gerant.GerantCommandeView;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
+import models.Client;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+import services.ClientService;
+import services.GerantService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
+import java.util.Properties;
 
 
 public class RegisterView extends JFrame {
@@ -12,17 +22,19 @@ public class RegisterView extends JFrame {
     private JTextField emailField;
     private JPasswordField passwordField;
     private JTextField adresseField;
-    private JTextField dateNaissanceField;
+    private JDatePickerImpl datePicker;
     private JButton validerButton;
     private JButton annulerButton;
-    public RegisterView() {
-        // Configuration de base
+    private ClientService clientService;
+    private static MongoDatabase database;
+    public RegisterView(MongoDatabase database){
+
+        RegisterView.database = database ;
+        this.clientService = new ClientService(database);
         setTitle("Inscription Client");
-        setSize(500, 400);
+        setSize(500, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        // Créer l'interface
         createUI();
     }
     private void createUI() {
@@ -35,7 +47,7 @@ public class RegisterView extends JFrame {
         emailField = new JTextField(20);
         passwordField = new JPasswordField(20);
         adresseField = new JTextField(20);
-        dateNaissanceField = new JTextField(20);
+        //dateNaissanceField = new JTextField(20);
         formPanel.add(new JLabel("Nom:"));
         formPanel.add(nomField);
 
@@ -51,9 +63,14 @@ public class RegisterView extends JFrame {
         formPanel.add(new JLabel("Adresse:"));
         formPanel.add(adresseField);
 
+        SpinnerDateModel dateModel = new SpinnerDateModel();
+        JSpinner dateSpinner = new JSpinner(dateModel);
+        JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy");
+        dateSpinner.setEditor(dateEditor);
+
         formPanel.add(new JLabel("Date de naissance (jj/mm/aaaa):"));
-        formPanel.add(dateNaissanceField);
-        // Panneau pour les boutons
+        formPanel.add(dateSpinner);
+
         JPanel buttonPanel = new JPanel();
 
         validerButton = new CustomButton("Valider", "valider");
@@ -61,13 +78,12 @@ public class RegisterView extends JFrame {
 
 
         validerButton.addActionListener(e -> {
-            // Vérification que tous les champs sont remplis
-            if (nomField.getText().isEmpty() ||
+            if (    nomField.getText().isEmpty() ||
                     prenomField.getText().isEmpty() ||
                     emailField.getText().isEmpty() ||
                     passwordField.getPassword().length == 0 ||
                     adresseField.getText().isEmpty() ||
-                    dateNaissanceField.getText().isEmpty()) {
+                    dateSpinner.getValue() == null) {
                 JOptionPane.showMessageDialog(
                         this,
                         "Veuillez remplir tous les champs du formulaire",
@@ -76,6 +92,7 @@ public class RegisterView extends JFrame {
                 );
                 return;
             }
+
 
             if (!emailField.getText().contains("@")) {
                 JOptionPane.showMessageDialog(
@@ -86,15 +103,13 @@ public class RegisterView extends JFrame {
                 );
                 return;
             }
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Inscription réussie (simulation)!",
-                    "Succès",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
 
+            Date dateNaissance = (Date) dateSpinner.getValue();
+
+            Client client1 = new Client(nomField.getText(), prenomField.getText(),dateNaissance,emailField.getText(),adresseField.getText(),prenomField.getText());
+            clientService.creerClient(client1);
             // Retourner à l'écran de connexion
-            ClientLoginView loginView = new ClientLoginView();
+            ClientLoginView loginView = new ClientLoginView(database);
             loginView.setVisible(true);
             dispose();
         });
@@ -113,7 +128,7 @@ public class RegisterView extends JFrame {
     }
     private void retourLogin() {
         // Créer et afficher la vue de connexion
-        ClientLoginView loginView = new ClientLoginView();
+        ClientLoginView loginView = new ClientLoginView(database);
         loginView.setVisible(true);
 
         // Fermer la fenêtre d'inscription
