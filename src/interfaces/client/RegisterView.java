@@ -112,6 +112,7 @@ public class RegisterView extends JFrame {
             ClientLoginView loginView = new ClientLoginView(database);
             loginView.setVisible(true);
             dispose();
+            //TODO : u have to destroy the registerView when u sign in , here still it appears ( m leaving it for now for testing purposes but dont foget to remove it later )
         });
 
         annulerButton.addActionListener(e -> retourLogin());

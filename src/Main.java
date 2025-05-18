@@ -4,6 +4,8 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import interfaces.Gerant.GerantCommandeView;
 import interfaces.client.ClientLoginView;
+import interfaces.client.CommandeView;
+import interfaces.client.MenuView;
 import interfaces.client.RegisterView;
 import org.bson.Document;
 import services.ClientService;
@@ -13,6 +15,7 @@ import services.GerantService;
 import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 
 public class Main {
@@ -46,9 +49,10 @@ public class Main {
                     gerantCommandeView.setVisible(true);
                     RegisterView registerView = new RegisterView(database);
                     registerView.setVisible(true);
+
                     */
-                    ClientLoginView loginView = new ClientLoginView(database);
-                    loginView.setVisible(true);
+                    MenuView menuView = new MenuView(database);
+                    menuView.setVisible(true);
 
                 });
 

@@ -93,8 +93,8 @@ public class ModifPassView extends JFrame {
         setContentPane(mainPanel);
     }
     private void retourMenu() {
-        MenuView menuView = new MenuView();
-        menuView.setVisible(true);
+        /*MenuView menuView = new MenuView();
+        menuView.setVisible(true);*/
         dispose();
     }
 }

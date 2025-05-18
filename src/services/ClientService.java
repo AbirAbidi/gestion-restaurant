@@ -13,10 +13,9 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -58,7 +57,8 @@ public class ClientService {
 		if (password != null) collection.updateOne(filter, Updates.set("password", password));
 		System.out.println("Client modifié dans MongoDB !");
 	}
-	
+
+	//TODO : if getTableMenu works , delete consulterMenu et chnger le nom de la fct restante a consulterMenu (car elle est demandé comme ca )
 	public void consulterMenu() {
 		MongoCollection<Document> collection = database.getCollection("produits");
 		/* in this we can either use
@@ -81,6 +81,20 @@ public class ClientService {
 		}finally {
 			cursor.close();
 		}
+	}
+	public String[] getTableMenu() {
+		MongoCollection<Document> collection = database.getCollection("produits");
+		List<Document> documents = collection.find().into(new ArrayList<>());
+
+		String[] data = new String[documents.size()];
+
+		for (int i = 0; i < documents.size(); i++) {
+			Document doc = documents.get(i);
+			String name = doc.getString("name");
+			Double prix = doc.getDouble("prix");
+			data[i] = name + " - " + prix + " €";
+		}
+		return data;
 	}
 
 	public void changerMp (String id,String nouvelleMp) {

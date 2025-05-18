@@ -76,8 +76,8 @@ public class PanierView extends JFrame {
         );
 
         retourButton.addActionListener(e -> {
-            MenuView menuView = new MenuView();
-            menuView.setVisible(true);
+           /* MenuView menuView = new MenuView();
+            menuView.setVisible(true);*/
             dispose();
         });
 

@@ -1,14 +1,20 @@
 package interfaces.client;
 
+import com.mongodb.client.MongoDatabase;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
+import services.ClientService;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MenuView extends JFrame {
+private ClientService clientService ;
+    private static MongoDatabase database;
 
-    public MenuView() {
+    public MenuView(MongoDatabase database) {
+        MenuView.database = database ;
+        this.clientService = new ClientService(database);
         // Configuration de base
         setTitle("Menu du Restaurant");
         setSize(600, 400);
@@ -30,12 +36,9 @@ public class MenuView extends JFrame {
         productsPanel.setLayout(new BoxLayout(productsPanel, BoxLayout.Y_AXIS));
         productsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        String[] products = {
-                "Pizza Margherita - 8.50 €",
-                "Salade César - 7.00 €",
-                "Tiramisu - 5.00 €",
-                "Sandwich Jambon-Fromage - 4.50 €"
-        };
+        String[] products = clientService.getTableMenu();
+
+
 
         for (String product : products) {
             JPanel row = new JPanel(new BorderLayout(10, 0));

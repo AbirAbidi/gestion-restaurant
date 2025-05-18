@@ -97,8 +97,8 @@ public class CommandeView extends JFrame {
         JButton menuButton = new CustomButton("Retour au menu", "annuler");
         JButton panierButton = new CustomButton("Voir panier", "valider");
         menuButton.addActionListener(e -> {
-            MenuView menuView = new MenuView();
-            menuView.setVisible(true);
+           /* MenuView menuView = new MenuView();
+            menuView.setVisible(true);*/
             dispose();
         });
         panierButton.addActionListener(e -> {
