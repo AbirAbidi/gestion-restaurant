@@ -161,8 +161,10 @@ public class ClientService {
 		}
 	}
 
-
-
-
+	public String roleUser(String email) {
+		MongoCollection<Document> collection = database.getCollection("clients");
+		Document doc = collection.find(eq("email", email)).first();
+		return doc.getString("role");
+	}
 
 }

@@ -50,10 +50,14 @@ public class Main {
                     RegisterView registerView = new RegisterView(database);
                     registerView.setVisible(true);
 
-                    */
                     MenuView menuView = new MenuView(database);
                     menuView.setVisible(true);
 
+
+                    */
+
+                    ClientLoginView clientLoginView = new ClientLoginView(database);
+                    clientLoginView.setVisible(true);
                 });
 
 

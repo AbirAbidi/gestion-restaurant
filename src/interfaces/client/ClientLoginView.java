@@ -1,11 +1,13 @@
 package interfaces.client;
 import com.mongodb.client.MongoDatabase;
+import interfaces.Gerant.GerantCommandeView;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
 import services.ClientService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class ClientLoginView extends JFrame {
     private JTextField emailField;
@@ -53,15 +55,19 @@ public class ClientLoginView extends JFrame {
        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
        loginButton = new CustomButton("Se connecter", "valider");
        registerButton = new CustomButton("S'inscrire", "ajouter");
-    // Ajouter les actions
         loginButton.addActionListener(e -> {
-        // Vérification simple
         if (emailField.getText().isEmpty() || passwordField.getPassword().length == 0) {
             JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs");
         } else if(clientService.signin(emailField.getText().trim(),passwordField.getText())){
-            JOptionPane.showMessageDialog(this, "Connexion réussie (simulation)");
+            String role = clientService.roleUser(emailField.getText()) ;
+            if (Objects.equals(role, "Gerant")){ // no its not chat here it was ==  but then i get this recom form the IDE to handle null results so i tab tab tab
+                GerantCommandeView gerantCommandeView = new GerantCommandeView(database);
+                gerantCommandeView.setVisible(true);
+            }else{
+               // JOptionPane.showMessageDialog(this, "Connexion réussie (simulation)");
             CommandeView commandeView = new CommandeView();
             commandeView.setVisible(true);
+            }
         }
     });
         registerButton.addActionListener(e -> ouvrirInscription());
@@ -74,11 +80,9 @@ public class ClientLoginView extends JFrame {
     add(mainPanel, BorderLayout.CENTER);
 }
     private void ouvrirInscription() {
-        // Créer et afficher la vue d'inscription
-        /*RegisterView registerView = new RegisterView();
-        registerView.setVisible(true);*/
+        RegisterView registerView = new RegisterView(database);
+        registerView.setVisible(true);
 
-        // Fermer la fenêtre de connexion
         this.dispose();
     }
 

@@ -106,7 +106,7 @@ public class RegisterView extends JFrame {
 
             Date dateNaissance = (Date) dateSpinner.getValue();
 
-            Client client1 = new Client(nomField.getText(), prenomField.getText(),dateNaissance,emailField.getText(),adresseField.getText(),prenomField.getText());
+            Client client1 = new Client(nomField.getText(), prenomField.getText(),dateNaissance,emailField.getText(),adresseField.getText(),new String(passwordField.getPassword()));
             clientService.creerClient(client1);
             // Retourner à l'écran de connexion
             ClientLoginView loginView = new ClientLoginView(database);
