@@ -2,11 +2,13 @@ import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import interfaces.Gerant.GerantCommandeView;
 import org.bson.Document;
 import services.ClientService;
 import services.CommandeService;
 import services.GerantService;
 
+import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -30,24 +32,23 @@ public class Main {
                 .build();
 
         // Create a new client and connect to the server
-        try (MongoClient mongoClient = MongoClients.create(settings)) {
-            try {
+        try {
+                MongoClient mongoClient = MongoClients.create(settings);
+
                 // Send a ping to confirm a successful connection
                 MongoDatabase database = mongoClient.getDatabase(prop.getProperty("DATABASE_NAME"));
                 database.runCommand(new Document("ping", 1));
                 System.out.println("Pinged your deployment. You successfully connected to MongoDB!");
-
-                ClientService clientservice = new ClientService(database);
-                GerantService gerantservice = new GerantService(database);
-                CommandeService commandeservice = new CommandeService(database);
-
-                //gerantservice.consulterLclients();
+                SwingUtilities.invokeLater(() -> {
+                    GerantCommandeView gerantCommandeView = new GerantCommandeView(database);
+                    gerantCommandeView.setVisible(true);
+                });
 
 
             } catch (MongoException e) {
                 e.printStackTrace();
             }
-        }
+
 
 
     }
