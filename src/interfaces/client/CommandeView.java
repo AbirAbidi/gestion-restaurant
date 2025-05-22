@@ -1,22 +1,34 @@
 package interfaces.client;
 
+import com.mongodb.client.MongoDatabase;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
+import services.ClientService;
 import services.GerantService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-public class CommandeView extends JFrame {
+import java.util.prefs.Preferences;
 
-    public CommandeView() {
+public class CommandeView extends JFrame {
+    private GerantService clientService;
+    private static MongoDatabase database;
+    Preferences prefs = Preferences.userRoot().node("Ids");
+    String storedId = prefs.get("userID", null);
+    public CommandeView(MongoDatabase database){
+
+        CommandeView.database = database ;
+        this.clientService = new GerantService(database);
         // Configuration de base
         setTitle("Mes Commandes");
         setSize(700, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         createUI();
+
     }
     private void createUI() {
 
@@ -30,61 +42,59 @@ public class CommandeView extends JFrame {
         commandesPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // En-tête du tableau
-        JPanel headerRow = new JPanel(new GridLayout(1, 4));
+        JPanel headerRow = new JPanel(new GridLayout(1, 5));
         headerRow.add(new JLabel("Numéro", JLabel.CENTER));
-        headerRow.add(new JLabel("Date", JLabel.CENTER));
         headerRow.add(new JLabel("Montant", JLabel.CENTER));
         headerRow.add(new JLabel("Statut", JLabel.CENTER));
+        headerRow.add(new JLabel("Type", JLabel.CENTER));
+        headerRow.add(new JLabel("Liste Produits", JLabel.CENTER));
         commandesPanel.add(headerRow);
         commandesPanel.add(Box.createVerticalStrut(10));
-        // dans la version finale on va utiliser List<Commande> commandes = clientController.getCommandesEnCours();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        JTable table = clientService.afficherCommandeClient();
 
-        // a supprime apres
-       Object[][] commandes = {
-                {"CMD001", dateFormat.format(new Date()), "25.50 €", "En livraison"},
-                {"CMD002", dateFormat.format(new Date()), "18.00 €", "Prête"},
-                {"CMD003", dateFormat.format(new Date()), "32.75 €", "En préparation"},
-                {"CMD003", dateFormat.format(new Date()), "32.75 €", "En préparation"},
-                {"CMD003", dateFormat.format(new Date()), "32.75 €", "En préparation"},
-                {"CMD001", dateFormat.format(new Date()), "25.50 €", "En livraison"},
-                {"CMD002", dateFormat.format(new Date()), "18.00 €", "Prête"},
-                {"CMD003", dateFormat.format(new Date()), "32.75 €", "En préparation"},
-                {"CMD003", dateFormat.format(new Date()), "32.75 €", "En préparation"},
-                {"CMD003", dateFormat.format(new Date()), "32.75 €", "En préparation"},
-                {"CMD001", dateFormat.format(new Date()), "25.50 €", "En livraison"},
-                {"CMD002", dateFormat.format(new Date()), "18.00 €", "Prête"},
-                {"CMD003", dateFormat.format(new Date()), "32.75 €", "En préparation"},
-                {"CMD003", dateFormat.format(new Date()), "32.75 €", "En préparation"},
-                {"CMD003", dateFormat.format(new Date()), "32.75 €", "En préparation"}
-        };
+        int clientCol = table.getColumnModel().getColumnIndex("Client");
+        int typeCol = table.getColumnModel().getColumnIndex("TypeCommande");
+        int etatCol = table.getColumnModel().getColumnIndex("EtatCommande");
+        int produitsCol = table.getColumnModel().getColumnIndex("Produits");
+        ArrayList<Object[]> commandes  = new ArrayList<>();
 
+        for (int i = 0; i < table.getRowCount(); i++) {
+            String clientIdObj = table.getValueAt(i, clientCol).toString();
+            if (clientIdObj != null && clientIdObj.equals(storedId)) {
+                Object[] row = new Object[4];
+                row[0] = i;        // Numéro
+                row[1] = table.getValueAt(i, typeCol);      // TypeCommande
+                row[2] = table.getValueAt(i, etatCol);      // EtatCommande
+                row[3] = table.getValueAt(i, produitsCol);  // Produits
+                commandes.add(row);
+            }
+        }
+        System.out.println(commandes);
 
-
-        // Ajouter les commandes au panneau
         for (Object[] commande : commandes) {
             JPanel row = new JPanel(new GridLayout(1, 4));
             row.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
             row.add(new JLabel(commande[0].toString(), JLabel.CENTER));
             row.add(new JLabel(commande[1].toString(), JLabel.CENTER));
-            row.add(new JLabel(commande[2].toString(), JLabel.CENTER));
-
-            // Colorier le statut selon son type
-            JLabel statutLabel = new JLabel(commande[3].toString(), JLabel.CENTER);
-            String statut = commande[3].toString();
-
-            if (statut.equals("En livraison")) {
+            JLabel statutLabel = new JLabel(commande[2].toString(), JLabel.CENTER);
+            String statut = commande[2].toString();
+            if (statut.equals("NON_TRAITEE")) {
                 statutLabel.setForeground(new Color(0, 0, 255)); // Bleu
-            } else if (statut.equals("Prête")) {
+            } else if (statut.equals("PRETE")) {
                 statutLabel.setForeground(new Color(0, 128, 0)); // Vert
-            } else if (statut.equals("En préparation")) {
+            } else if (statut.equals("EN_PREPARATION")) {
                 statutLabel.setForeground(new Color(255, 165, 0)); // Orange
-            } else if (statut.equals("Annulée")) {
-            statutLabel.setForeground(new Color(255, 0, 102)); // rouge
-        }
-
+            } else if (statut.equals("ANNULE")) {
+                statutLabel.setForeground(new Color(255, 0, 102)); // rouge
+            }
             row.add(statutLabel);
+            row.add(new JLabel(commande[3].toString(), JLabel.CENTER));
+
+
+
+
+
 
             commandesPanel.add(row);
             commandesPanel.add(Box.createVerticalStrut(5));

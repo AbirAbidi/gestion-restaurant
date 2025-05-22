@@ -7,7 +7,7 @@ import java.util.List;
 public class Commande {
 	
 	//etat de commande 
-	public enum EtatCommande {NON_TRAITEE , EN_PREPARATION , PRETE ,EN_ROUTE } 
+	public enum EtatCommande {NON_TRAITEE , EN_PREPARATION , PRETE , ANNULE }
 	 //Commande à livrer à domicile , Commande sur place,Commande à importer
 	public enum TypeCommande { LIVRAISON, SUR_PLACE , A_IMPORTER }
 

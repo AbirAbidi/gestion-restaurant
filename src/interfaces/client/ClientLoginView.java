@@ -3,11 +3,13 @@ import com.mongodb.client.MongoDatabase;
 import interfaces.Gerant.GerantCommandeView;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
+import org.bson.types.ObjectId;
 import services.ClientService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
+import java.util.prefs.Preferences;
 
 public class ClientLoginView extends JFrame {
     private JTextField emailField;
@@ -59,13 +61,16 @@ public class ClientLoginView extends JFrame {
         if (emailField.getText().isEmpty() || passwordField.getPassword().length == 0) {
             JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs");
         } else if(clientService.signin(emailField.getText().trim(),passwordField.getText())){
-            String role = clientService.roleUser(emailField.getText()) ;
-            if (Objects.equals(role, "Gerant")){ // no its not chat here it was ==  but then i get this recom form the IDE to handle null results so i tab tab tab
+            String role = clientService.roleUser(emailField.getText().trim()) ;
+            ObjectId userID = clientService.idUser(emailField.getText().trim());
+            Preferences prefs = Preferences.userRoot().node("Ids"); // this right here is for local storage using prefernces api in java ( 9rina local storage f frontend)
+            prefs.put("userID", userID.toString());
+            if (Objects.equals(role, "Gerant")){ // no it's not chat here it was ==  but then i get this recom form the IDE to handle null results so i tab tab tab
                 GerantCommandeView gerantCommandeView = new GerantCommandeView(database);
                 gerantCommandeView.setVisible(true);
             }else{
                // JOptionPane.showMessageDialog(this, "Connexion réussie (simulation)");
-            CommandeView commandeView = new CommandeView();
+            CommandeView commandeView = new CommandeView(database);
             commandeView.setVisible(true);
             }
         }

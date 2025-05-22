@@ -167,4 +167,56 @@ public class ClientService {
 		return doc.getString("role");
 	}
 
+	public ObjectId idUser(String email) {
+		MongoCollection<Document> collection = database.getCollection("clients");
+		Document doc = collection.find(eq("email", email)).first();
+		return doc.getObjectId("_id");
+	}
+
+	/*public JTable getTableCommande(String id) {
+		MongoCollection<Document> collection = database.getCollection("commandes");
+		String[] columnNames = {"statut", "type","list_produits"};
+		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+		try {
+			MongoCursor<Document> cursor = collection.find().iterator();
+			int docCount = 0;
+			while (cursor.hasNext() && id.equals(cursor.next().getString("client"))) {
+				Document doc = cursor.next();
+				docCount++;
+				System.out.println("Processing document #" + docCount + ": " + doc.toJson());
+
+				try {
+					String typeCommande = doc.getString("TypeCommande");
+
+					String etatCommande = doc.getString("EtatCommande");
+
+					String produitsStr = "";
+					try {
+						List<String> produits = (List<String>) doc.get("produits");
+						if (produits != null && !produits.isEmpty()) {
+							produitsStr = String.join(", ", produits);
+						}
+					} catch (ClassCastException e) {
+						System.err.println("Error casting Produits to List<String>: " + e.getMessage());
+						Object produitsObj = doc.get("produits");
+					}
+
+					// Add row to table model
+					model.addRow(new Object[]{id, client, typeCommande, etatCommande, produitsStr});
+					System.out.println(produitsStr);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		JTable table = new JTable(model);
+		return table;
+	}
+*/
+
+
 }

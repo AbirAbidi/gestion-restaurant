@@ -92,20 +92,15 @@ public class GerantService {
 			while (cursor.hasNext()) {
 				Document doc = cursor.next();
 				docCount++;
-				System.out.println("Processing document #" + docCount + ": " + doc.toJson());
+				//System.out.println("Processing document #" + docCount + ": " + doc.toJson());
 
 				try {
 					ObjectId objectId = doc.getObjectId("_id");
 					String id = objectId != null ? objectId.toString() : "Unknown ID";
 
 					String client = doc.getString("client");
-					if (client == null) client = "Unknown Client";
-
 					String typeCommande = doc.getString("TypeCommande");
-					if (typeCommande == null) typeCommande = "Unknown Type";
-
 					String etatCommande = doc.getString("EtatCommande");
-					if (etatCommande == null) etatCommande = "Unknown Status";
 
 					String produitsStr = "";
 					try {
@@ -120,7 +115,7 @@ public class GerantService {
 
 					// Add row to table model
 					model.addRow(new Object[]{id, client, typeCommande, etatCommande, produitsStr});
-					System.out.println(produitsStr);
+					//System.out.println(produitsStr);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

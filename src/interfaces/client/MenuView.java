@@ -61,7 +61,7 @@ private ClientService clientService ;
         JButton retourButton = new CustomButton("Retour", "annuler");
         JButton commandesButton = new CustomButton("Mes Commandes", "modifier");
         commandesButton.addActionListener(e -> {
-            CommandeView commandeView = new CommandeView();
+            CommandeView commandeView = new CommandeView(database);
             commandeView.setVisible(true);
             dispose();
         });
