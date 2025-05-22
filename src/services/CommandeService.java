@@ -16,10 +16,10 @@ public class CommandeService {
 		this.database = database;
 	}
 	public void modifierEtatCommande(Commande c , String nouvelEtat) {
-		MongoCollection<Document> collection = database.getCollection("commandes");
+		/*MongoCollection<Document> collection = database.getCollection("commandes");
 		Bson filter = Filters.eq("_id", c.getId());
 		if (nouvelEtat != null) collection.updateOne(filter, Updates.set("EtatCommande", nouvelEtat));
-		System.out.println("Commande modifiée");
+		System.out.println("Commande modifiée");*/
 	}
 
 }

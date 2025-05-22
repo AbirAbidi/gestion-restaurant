@@ -118,13 +118,13 @@ public class ClientService {
 	}
 
 	public void modifierCommande (Commande c , Commande.EtatCommande etat_commande , Commande.TypeCommande type_commande  , List<String> produits) {
-		MongoCollection<Document> collection = database.getCollection("commandes");
+	/*	MongoCollection<Document> collection = database.getCollection("commandes");
 		Bson filter = eq("_id", c.getId());
 
 		if (etat_commande != null) collection.updateOne(filter, Updates.set("EtatCommande", etat_commande));
 		if (type_commande != null) collection.updateOne(filter, Updates.set("TypeCommande", type_commande));
 		if (produits != null) collection.updateOne(filter, Updates.set("produits", produits));
-
+*/
 	}
 
 	public void supprimerCommande (String id) {
