@@ -4,10 +4,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.event.CommandEvent;
 import interfaces.Gerant.GerantCommandeView;
-import interfaces.client.ClientLoginView;
-import interfaces.client.CommandeView;
-import interfaces.client.MenuView;
-import interfaces.client.RegisterView;
+import interfaces.client.*;
 import org.bson.Document;
 import services.ClientService;
 import services.CommandeService;
@@ -46,18 +43,12 @@ public class Main {
                 database.runCommand(new Document("ping", 1));
                 System.out.println("Pinged your deployment. You successfully connected to MongoDB!");
                 SwingUtilities.invokeLater(() -> {
-                    /*GerantCommandeView gerantCommandeView = new GerantCommandeView(database);
-                    gerantCommandeView.setVisible(true);
-                    RegisterView registerView = new RegisterView(database);
-                    registerView.setVisible(true);
-
-                    MenuView menuView = new MenuView(database);
-                    menuView.setVisible(true);
 
 
-                    */
                     ClientLoginView clientLoginView = new ClientLoginView(database);
                     clientLoginView.setVisible(true);
+
+
                 });
 
 

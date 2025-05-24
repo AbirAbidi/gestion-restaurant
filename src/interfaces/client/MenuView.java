@@ -13,7 +13,6 @@ import java.util.prefs.Preferences;
 
 public class MenuView extends JFrame {
 private final ClientService clientService ;
-private  Commande commande;
 private static MongoDatabase database;
     Preferences prefs = Preferences.userRoot().node("Ids");
     String storedId = prefs.get("userID", null);

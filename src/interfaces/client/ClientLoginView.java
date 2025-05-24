@@ -16,6 +16,7 @@ public class ClientLoginView extends JFrame {
     private JPasswordField passwordField;
     private JButton loginButton;
     private JButton registerButton;
+    private JButton changeMpButton;
     private ClientService clientService;
     private static MongoDatabase database;
 
@@ -24,7 +25,7 @@ public class ClientLoginView extends JFrame {
         ClientLoginView.database = database ;
         this.clientService = new ClientService(database);
         setTitle("Connexion Client");
-        setSize(400, 300);
+        setSize(400, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -37,32 +38,37 @@ public class ClientLoginView extends JFrame {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        JPanel emailPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        add(mainPanel, BorderLayout.CENTER);
+        JPanel formPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         JLabel emailLabel = new JLabel("Email: ");
-        emailField = new JTextField(15);
-        emailPanel.add(emailLabel);
-        emailPanel.add(emailField);
-        mainPanel.add(emailPanel);
+        emailLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        emailField = new JTextField(20);
+        JLabel passwordLabel = new JLabel("Mot de passe:");
+        passwordLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        passwordField = new JPasswordField(20);
 
+// Ajouter à la grille
+        formPanel.add(emailLabel);
+        formPanel.add(emailField);
+        formPanel.add(passwordLabel);
+        formPanel.add(passwordField);
 
-       mainPanel.add(Box.createVerticalStrut(10));
-       JPanel passwordPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-       JLabel passwordLabel = new JLabel("Mot de passe: ");
-       passwordField = new JPasswordField(15);
-       passwordPanel.add(passwordLabel);
-       passwordPanel.add(passwordField);
+// Ajouter la grille au panel principal
+        mainPanel.add(formPanel);
 
+// Espacement après le formulaire
+        mainPanel.add(Box.createVerticalStrut(20));
 
-       mainPanel.add(passwordPanel);
        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
        loginButton = new CustomButton("Se connecter", "valider");
        registerButton = new CustomButton("S'inscrire", "ajouter");
+       changeMpButton = new CustomButton("Changer mot de passe","modifier");
         loginButton.addActionListener(e -> {
         if (emailField.getText().isEmpty() || passwordField.getPassword().length == 0) {
             JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs");
         } else if(clientService.signin(emailField.getText().trim(),passwordField.getText())){
             String role = clientService.roleUser(emailField.getText().trim()) ;
-            ObjectId userID = clientService.idUser(emailField.getText().trim());
+            String userID = clientService.idUser(emailField.getText().trim());
             Preferences prefs = Preferences.userRoot().node("Ids"); // this right here is for local storage using prefernces api in java ( 9rina local storage f frontend)
             prefs.put("userID", userID.toString());
             if (Objects.equals(role, "Gerant")){ // no it's not chat here it was ==  but then i get this recom form the IDE to handle null results so i tab tab tab
@@ -76,9 +82,10 @@ public class ClientLoginView extends JFrame {
         }
     });
         registerButton.addActionListener(e -> ouvrirInscription());
-
+        changeMpButton.addActionListener(e -> changeMpView());
         buttonPanel.add(loginButton);
         buttonPanel.add(registerButton);
+        buttonPanel.add(changeMpButton);
         mainPanel.add(buttonPanel);
 
     // Ajouter le panneau principal
@@ -87,6 +94,12 @@ public class ClientLoginView extends JFrame {
     private void ouvrirInscription() {
         RegisterView registerView = new RegisterView(database);
         registerView.setVisible(true);
+
+        this.dispose();
+    }
+    private void changeMpView() {
+        ModifPassView mpView = new ModifPassView(database);
+        mpView.setVisible(true);
 
         this.dispose();
     }

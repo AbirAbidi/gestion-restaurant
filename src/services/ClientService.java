@@ -58,30 +58,6 @@ public class ClientService {
 		System.out.println("Client modifié dans MongoDB !");
 	}
 
-	//TODO : if getTableMenu works , delete consulterMenu et chnger le nom de la fct restante a consulterMenu (car elle est demandé comme ca )
-	public void consulterMenu() {
-		MongoCollection<Document> collection = database.getCollection("produits");
-		/* in this we can either use
-		findIterate<Document> findIterable = collection.find(new Document());
-		then put finditerate in a list and print it but its only adviced for small amount of data (which can be the case ) cuz we wont have a thousand item in the menu
-				List<Document> results = new ArrayList<>() ;
-		findIterable.into(results) ;
-		System.out.println(results);
-
-		and the .into() do the putting in an array job
-		*/
-
-		// the try finally to close the cursor (to free up the cursor's consumption od resources both in the app and the mongodb deployment)
-		MongoCursor<Document> cursor = collection.find().iterator();
-		try {
-			while
-				(cursor.hasNext()) {
-				System.out.println(cursor.next().getString("name"));
-			}
-		}finally {
-			cursor.close();
-		}
-	}
 	public String[] getTableMenu() {
 		MongoCollection<Document> collection = database.getCollection("produits");
 		List<Document> documents = collection.find().into(new ArrayList<>());
@@ -97,11 +73,19 @@ public class ClientService {
 		return data;
 	}
 
-	public void changerMp (String id,String nouvelleMp) {
+	public boolean changerMp (String id,String email ,String oldPass ,String nouvelleMp) {
 		MongoCollection<Document> collection = database.getCollection("clients");
 		//filters used to filter and Updates to find the updating field ( they re queries like)
-		collection.updateOne(eq(("_id"), new ObjectId(id)), Updates.set("password", nouvelleMp));
-		System.out.println("Client modifié son mp dans MongoDB !");
+		Document filter = collection.find(eq("_id",new ObjectId(id))).first();
+        String emailIndb = filter.getString("email");
+		String passwordIndb = filter.getString("password");
+		if (email.equals(emailIndb)&&passwordIndb.equals(oldPass)) {
+			collection.updateOne(eq(("_id"), new ObjectId(id)), Updates.set("password", nouvelleMp));
+			System.out.println("Client modifié son mp dans MongoDB !");
+			return true;
+		}
+		return false;
+
 	}
 	
 	public void passerCommande(Commande cm) {
@@ -167,10 +151,13 @@ public class ClientService {
 		return doc.getString("role");
 	}
 
-	public ObjectId idUser(String email) {
+	public String idUser(String email) {
 		MongoCollection<Document> collection = database.getCollection("clients");
 		Document doc = collection.find(eq("email", email)).first();
-		return doc.getObjectId("_id");
+		if(doc == null) {
+			return "null";
+		}
+		return doc.getObjectId("_id").toString();
 	}
 
 	/*public JTable getTableCommande(String id) {
