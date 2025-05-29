@@ -1,35 +1,36 @@
 package interfaces.Gerant;
 
+import com.mongodb.client.MongoDatabase;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
+import services.ClientService;
+import services.GerantService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * Vue de gestion des produits pour le gérant (version préparée pour le contrôleur)
  */
 public class GerantProduitView extends JFrame {
+    private ClientService clientService;
+    private static MongoDatabase database;
+    private  GerantService gerantService;
 
-    // Dans la version avec contrôleur :
-    // private GerantController gerantController;
+
 
     private JPanel produitsPanel;
 
-    /**
-     * Constructeur
-     */
-    public GerantProduitView() {
-        // Configuration de base
+    public GerantProduitView(MongoDatabase database) {
+        GerantProduitView.database = database ;
+        this.clientService = new ClientService(database);
+        this.gerantService = new GerantService(database);
         setTitle("Gestion des Produits");
         setSize(700, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        // Créer l'interface
         createUI();
-
-        // Charger les produits
         chargerProduits();
     }
 
@@ -37,21 +38,19 @@ public class GerantProduitView extends JFrame {
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         HeaderPanel headerPanel = new HeaderPanel("Gestion des Produits");
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
-
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton ajouterButton = new CustomButton("Ajouter Produit", "ajouter");
-
         ajouterButton.addActionListener(e -> {
-            // Dans la version avec contrôleur :
-            // ouvrirFormulaireAjout();
-
-            JOptionPane.showMessageDialog(this, "Ajout d'un produit (simulation)");
+            GerantAjoutProduit gerantAjoutProduit = new GerantAjoutProduit(database);
+            gerantAjoutProduit.setVisible(true);
         });
-
         topPanel.add(ajouterButton);
-        mainPanel.add(topPanel, BorderLayout.NORTH);
+        JPanel headerContainer = new JPanel();
+        headerContainer.setLayout(new BoxLayout(headerContainer, BoxLayout.Y_AXIS));
+        headerContainer.add(headerPanel);
+        headerContainer.add(topPanel);
 
+        mainPanel.add(headerContainer, BorderLayout.NORTH);
         // Liste des produits
         produitsPanel = new JPanel();
         produitsPanel.setLayout(new BoxLayout(produitsPanel, BoxLayout.Y_AXIS));
@@ -78,28 +77,28 @@ public class GerantProduitView extends JFrame {
     }
 
     private void chargerProduits() {
-        // Dans la version avec contrôleur :
-        // List<Produit> produits = gerantController.getAllProduits();
-        // for (Produit produit : produits) {
-        //     afficherProduit(produit);
-        // }
-        afficherProduit("Pizza Margherita", "8.50 €", "Plat");
-        afficherProduit("Salade César", "7.00 €", "Salade");
-        afficherProduit("Coca-Cola", "2.50 €", "Boisson");
-        afficherProduit("Tiramisu", "5.00 €", "Dessert");
-    }
-    private void afficherProduit(String nom, String prix, String categorie) {
-        // Version avec contrôleur :
-        // private void afficherProduit(Produit produit) {
-        //     String nom = produit.getNom();
-        //     String prix = produit.getPrix() + " €";
-        //     String categorie = produit.getCategorie();
+        produitsPanel.removeAll();
+        String[] produits = clientService.getTableMenu();
 
+        for (String ligne : produits) {
+            String[] parts = ligne.split(" - ");
+            String name = parts[0];
+            String prix = parts[1];
+            String id = parts[2];
+
+            afficherProduit(name, prix,id);
+        }
+
+        produitsPanel.revalidate();
+        produitsPanel.repaint();
+    }
+
+    private void afficherProduit(String name , String prix,String id ) {
         JPanel produitPanel = new JPanel(new BorderLayout());
         produitPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         produitPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
 
-        JLabel infoLabel = new JLabel(nom + " - " + prix + " - " + categorie);
+        JLabel infoLabel = new JLabel(name + " - " + prix );
         infoLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         produitPanel.add(infoLabel, BorderLayout.CENTER);
 
@@ -107,32 +106,28 @@ public class GerantProduitView extends JFrame {
 
         JButton modifierButton = new CustomButton("Modifier", "modifier");
         modifierButton.addActionListener(e -> {
-            // Avec contrôleur :
-            // ouvrirFormulaireModification(produit);
+           GerantModifierProduit gerantModifierProduit = new GerantModifierProduit(database,id);
+           gerantModifierProduit.setVisible(true);
 
-            JOptionPane.showMessageDialog(this, "Modifier: " + nom);
         });
 
         JButton supprimerButton = new CustomButton("Supprimer", "supprimer");
         supprimerButton.addActionListener(e -> {
-            // Avec contrôleur :
-            // if (gerantController.supprimerProduit(produit.getId())) {
-            //     produitsPanel.remove(produitPanel);
-            //     produitsPanel.revalidate();
-            //     produitsPanel.repaint();
-            //     JOptionPane.showMessageDialog(this, "Produit supprimé");
-            // }
 
             int choix = JOptionPane.showConfirmDialog(this,
-                    "Supprimer " + nom + " ?",
+                    "Supprimer " + name + " ?",
                     "Confirmation",
                     JOptionPane.YES_NO_OPTION);
-
-            if (choix == JOptionPane.YES_OPTION) {
-                produitsPanel.remove(produitPanel);
-                produitsPanel.revalidate();
-                produitsPanel.repaint();
+            if(choix == JOptionPane.YES_OPTION){
+                if (gerantService.supprimerPrdouit(id)) {
+                    produitsPanel.remove(produitPanel);
+                    produitsPanel.revalidate();
+                    produitsPanel.repaint();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Erreur lors de la suppression.");
+                }
             }
+
         });
 
         boutonsPanel.add(modifierButton);

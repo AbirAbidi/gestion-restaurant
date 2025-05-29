@@ -7,15 +7,13 @@ import java.math.BigDecimal;
 public class Produit {
 
 
-	private ObjectId id;
 	private String name ;
 	private String description ;
 	private double prix ;
 	private String type ;  // plat, un sandwich, une salade, un dessert, une viennoiserie, une boisson… 
 	
 	
-	public Produit(  ObjectId id ,String name , String description , double prix , String type   ) {
-		this.id = id;
+	public Produit(  String name , String description , double prix , String type   ) {
 		this.name = name;
 		this.description = description;
 		this.prix = prix;
@@ -24,13 +22,6 @@ public class Produit {
 
 
 
-	public ObjectId getId() {
-		return id;
-	}
-
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;

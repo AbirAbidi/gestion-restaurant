@@ -68,7 +68,8 @@ public class ClientService {
 			Document doc = documents.get(i);
 			String name = doc.getString("name");
 			Double prix = doc.getDouble("prix");
-			data[i] = name + " - " + prix + " €";
+			String id = doc.getObjectId("_id").toString();
+			data[i] = name + " - " + prix + " TND" + " - " + id;
 		}
 		return data;
 	}

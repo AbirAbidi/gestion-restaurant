@@ -52,8 +52,8 @@ public class Main {
 
                    /* ClientLoginView clientLoginView = new ClientLoginView(database);
                     clientLoginView.setVisible(true);*/
-                    GerantCommandeView gerantCommandeView = new GerantCommandeView(database);
-                    gerantCommandeView.setVisible(true);
+                    GerantProduitView gerantProduitView = new GerantProduitView(database);
+                    gerantProduitView.setVisible(true);
 
 
                 });

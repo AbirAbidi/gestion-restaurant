@@ -68,7 +68,6 @@ public class GerantCommandeView extends JFrame {
         });
         bottomPanel.add(retourButton);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
-        // Définir le contenu
         setContentPane(mainPanel);
     }
     private void  chargerCommandes() {

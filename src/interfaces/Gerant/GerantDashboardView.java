@@ -64,8 +64,8 @@ public class GerantDashboardView extends JFrame {
             // dispose();
 
             // CORRECTION: Ouverture directe de la vue des produits
-            GerantProduitView produitView = new GerantProduitView();
-            produitView.setVisible(true);
+            /*GerantProduitView produitView = new GerantProduitView();
+            produitView.setVisible(true);*/
             dispose();
         }); // CORRECTION: Fermeture de l'accolade du listener
 

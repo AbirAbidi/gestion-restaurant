@@ -30,7 +30,7 @@ public class GerantService {
 
 
 
-	
+
 	public void AjoutProduit(Produit p) {
 		MongoCollection<Document> collection = database.getCollection("produits");
 
@@ -59,16 +59,22 @@ public class GerantService {
 	}
 
 
-	public void supprimerPrdouit(String id) {
+	public boolean supprimerPrdouit(String id) {
 		MongoCollection<Document> collection = database.getCollection("produits");
-		collection.deleteOne(eq("_id", new ObjectId(id)));
-		System.out.println("produit supprimé !");
+		DeleteResult result  = collection.deleteOne(eq("_id", new ObjectId(id)));
+		if (result.getDeletedCount() > 0) {
+			System.out.println("Produit supprimé !");
+			return true;
+		} else {
+			System.out.println("Probleme de supprim!.");
+			return false;
+		}
 	}
-	
-	public void modifierProduit( Produit p ,String name ,String description ,double prix ,String type  ) {
+
+	public void modifierProduit( String id ,String name ,String description ,double prix ,String type  ) {
 		MongoCollection<Document> collection = database.getCollection("produits");
 
-		Bson filter = eq("_id", p.getId());
+		Bson filter = eq("_id", new ObjectId(id));
 
 		if (name != null) collection.updateOne(filter, Updates.set("name", name));
 		if (description != null) collection.updateOne(filter, Updates.set("description", description));
@@ -143,7 +149,7 @@ public class GerantService {
 		JTable table = new JTable(model);
 		return table;
 	}
-	
+
 	public void suppprimerCommande(String id) {
 		MongoCollection<Document> collection = database.getCollection("commandes");
 		collection.deleteOne(eq("_id", id));
@@ -155,5 +161,5 @@ public class GerantService {
 		Document doc = collection.find(eq("_id", new ObjectId(id))).first();
 		return doc.getString("name");
 	}
-	
+
 }
