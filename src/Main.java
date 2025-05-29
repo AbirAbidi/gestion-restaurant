@@ -3,8 +3,13 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.event.CommandEvent;
+import interfaces.Gerant.GerantClientView;
 import interfaces.Gerant.GerantCommandeView;
+import interfaces.Gerant.GerantDashboardView;
+import interfaces.Gerant.GerantProduitView;
 import interfaces.client.*;
+import interfaces.employe.EmployeCommandeView;
+import interfaces.employe.EmployeDashboardView;
 import org.bson.Document;
 import services.ClientService;
 import services.CommandeService;
@@ -45,8 +50,10 @@ public class Main {
                 SwingUtilities.invokeLater(() -> {
 
 
-                    ClientLoginView clientLoginView = new ClientLoginView(database);
-                    clientLoginView.setVisible(true);
+                   /* ClientLoginView clientLoginView = new ClientLoginView(database);
+                    clientLoginView.setVisible(true);*/
+                    GerantCommandeView gerantCommandeView = new GerantCommandeView(database);
+                    gerantCommandeView.setVisible(true);
 
 
                 });

@@ -88,8 +88,8 @@ public class GerantDashboardView extends JFrame {
             // dispose();
 
             // Ouvrir la vue de gestion des clients
-            GerantClientView clientView = new GerantClientView();
-            clientView.setVisible(true);
+            /*GerantClientView clientView = new GerantClientView();
+            clientView.setVisible(true);*/
             dispose();
         });
 
@@ -101,12 +101,13 @@ public class GerantDashboardView extends JFrame {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton logoutButton = new CustomButton("Déconnexion", "annuler");
 
-        logoutButton.addActionListener(e -> {
+     /*   logoutButton.addActionListener(e -> {
             // Retour à l'écran de connexion
             GerantLoginView loginView = new GerantLoginView();
             loginView.setVisible(true);
             dispose();
-        });
+        });*/
+
 
         bottomPanel.add(logoutButton);
 

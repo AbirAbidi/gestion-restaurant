@@ -5,9 +5,11 @@ import com.mongodb.client.MongoDatabase;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
 import models.Client;
+import models.Commande;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import services.ClientService;
+import services.CommandeService;
 import services.GerantService;
 
 import javax.swing.*;
@@ -17,14 +19,17 @@ import java.util.Arrays;
 import java.util.List;
 
 
+
 public class GerantCommandeView extends JFrame {
     private static MongoDatabase database;
     private GerantService gerantService;
+    private CommandeService commandeService;
     private JPanel commandesPanel;
 
     public  GerantCommandeView (MongoDatabase database){
         GerantCommandeView.database = database ;
         this.gerantService = new GerantService(database);
+        this.commandeService = new CommandeService(database);
 
         setTitle("Gestion des Commandes");
         setSize(700, 500);
@@ -42,13 +47,6 @@ public class GerantCommandeView extends JFrame {
         String[] statuts = {"Toutes", "En préparation", "Prête", "En livraison", "Livrée"};
         JComboBox<String> filtreStatutComboBox = new JComboBox<>(statuts);
         filtreStatutComboBox.addActionListener(e -> {
-            // Dans la version avec contrôleur :
-            // String statut = (String) filtreStatutComboBox.getSelectedItem();
-            // if ("Toutes".equals(statut)) {
-            //     chargerCommandes();
-            // } else {
-            //     chargerCommandesParStatut(statut);
-            // }
             JOptionPane.showMessageDialog(this,
                     "Filtrage par: " + filtreStatutComboBox.getSelectedItem() + " (simulation)");
         });
@@ -73,13 +71,13 @@ public class GerantCommandeView extends JFrame {
         // Définir le contenu
         setContentPane(mainPanel);
     }
-    private void chargerCommandes() {
+    private void  chargerCommandes() {
 
 
         JTable commandesTable = gerantService.afficherCommandeClient();
         // Process each row in the table
         for (int i = 0; i < commandesTable.getRowCount(); i++) {
-            String id = commandesTable.getValueAt(i, 0).toString();
+            String ID = commandesTable.getValueAt(i, 0).toString();
             String client = commandesTable.getValueAt(i, 1).toString();
             String nameClient = gerantService.getClientName(client);
             String etatCommande = commandesTable.getValueAt(i, 3).toString();
@@ -92,14 +90,14 @@ public class GerantCommandeView extends JFrame {
 
 
             // Call afficherCommande with the extracted data
-            afficherCommande(String.valueOf(i+1), nameClient, etatCommande, typeCommande, produits);
+            afficherCommande(ID ,String.valueOf(i+1), nameClient, etatCommande, typeCommande, produits);
         }
 
         // Refresh the UI
         commandesPanel.revalidate();
         commandesPanel.repaint();
     }
-    private void afficherCommande(String id, String client, String EtatCommande, String TypeCommande,List Produits) {
+    private void afficherCommande(String ID ,String id, String client, String EtatCommande, String TypeCommande,List Produits) {
         JPanel commandePanel = new JPanel(new BorderLayout());
         commandePanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         commandePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
@@ -113,10 +111,37 @@ public class GerantCommandeView extends JFrame {
         // Bouton pour changer le statut
         JPanel boutonsPanel = new JPanel();
         JButton changerStatutButton = new CustomButton("Changer Statut", "modifier");
+
+        JPopupMenu statutMenu = new JPopupMenu();
+        String[] statuts = Arrays.stream(Commande.EtatCommande.values())
+                .map(Enum::name)
+                .filter(s -> !s.equals(EtatCommande)) // this line is responsible on showinf every etat to change to sauf the one we have rn
+                .toArray(String[]::new);
+
+        for (String statut : statuts) {
+            JMenuItem item = new JMenuItem(statut);
+            item.addActionListener(evt -> {
+                int choix = JOptionPane.showConfirmDialog(this,
+                        "Changer le statut de la commande numéro " + id + " à \"" + statut + "\" ?",
+                        "Confirmation",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (choix == JOptionPane.YES_OPTION) {
+                    commandeService.modifierEtatCommande(ID , statut );
+                    String newInfo = id + " - " + client + " - " + statut + " - " + TypeCommande + " - " + Produits;
+                    infoLabel.setText(newInfo);
+
+                    commandesPanel.revalidate();
+                    commandesPanel.repaint();
+                }
+            });
+            statutMenu.add(item);
+        }
+
         changerStatutButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this,
-                    "Changer statut de: " + id + " (simulation)");
+            statutMenu.show(changerStatutButton, 0, changerStatutButton.getHeight());
         });
+
 
         boutonsPanel.add(changerStatutButton);
         commandePanel.add(boutonsPanel, BorderLayout.EAST);

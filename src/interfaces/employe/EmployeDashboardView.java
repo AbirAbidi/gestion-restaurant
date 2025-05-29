@@ -88,8 +88,8 @@ public class EmployeDashboardView extends JFrame {
 
         logoutButton.addActionListener(e -> {
             // Retour à l'écran de connexion
-            EmployeLoginView loginView = new EmployeLoginView();
-            loginView.setVisible(true);
+           /* EmployeLoginView loginView = new EmployeLoginView();
+            loginView.setVisible(true);*/
             dispose();
         });
 

@@ -8,6 +8,7 @@ import com.mongodb.client.model.Updates;
 import models.Commande;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 public class CommandeService {
 
@@ -15,11 +16,11 @@ public class CommandeService {
 	public CommandeService(MongoDatabase database) {
 		this.database = database;
 	}
-	public void modifierEtatCommande(Commande c , String nouvelEtat) {
-		/*MongoCollection<Document> collection = database.getCollection("commandes");
-		Bson filter = Filters.eq("_id", c.getId());
+	public void modifierEtatCommande(String id, String nouvelEtat) {
+		MongoCollection<Document> collection = database.getCollection("commandes");
+		Bson filter = Filters.eq("_id", new ObjectId(id));
 		if (nouvelEtat != null) collection.updateOne(filter, Updates.set("EtatCommande", nouvelEtat));
-		System.out.println("Commande modifiée");*/
+		System.out.println("Commande modifiée");
 	}
 
 }

@@ -28,7 +28,7 @@ public class ClientService {
 		this.database = database;
 	}
 
-
+//TODO CHECK BEFORE ADDING IF USER ALREADY EXIST
 	public void creerClient(Client c) {
 		MongoCollection<Document> collection = database.getCollection("clients");
 

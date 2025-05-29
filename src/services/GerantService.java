@@ -2,6 +2,7 @@ package services;
 
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.DeleteResult;
 import models.Client;
 import models.Commande;
 import models.Produit;
@@ -14,6 +15,7 @@ import org.bson.types.ObjectId;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -42,24 +44,20 @@ public class GerantService {
 		System.out.println("Produit ajouté dans MongoDB !");
 	}
 
-	public void consulterLclients () {
+	public boolean supprimerClient(String email) {
 		MongoCollection<Document> collection = database.getCollection("clients");
-		MongoCursor<Document> cursor = collection.find().iterator();
-		try {
-			while
-			(cursor.hasNext()) {
-				System.out.println(cursor.next());
-			}
-		}finally {
-			cursor.close();
+		//DeleteResult The result of a delete operation (sth new to learn)
+		DeleteResult result = collection.deleteOne(eq("email", email));
+
+		if (result.getDeletedCount() > 0) {
+			System.out.println("Client supprimé !");
+			return true;
+		} else {
+			System.out.println("Aucun client trouvé avec cet email.");
+			return false;
 		}
 	}
 
-	public void supprimerClient(String id) {
-		MongoCollection<Document> collection = database.getCollection("clients");
-		collection.deleteOne(eq("_id", new ObjectId(id)));
-		System.out.println("Client supprimé !");
-	}
 
 	public void supprimerPrdouit(String id) {
 		MongoCollection<Document> collection = database.getCollection("produits");
@@ -78,6 +76,23 @@ public class GerantService {
 		if (type != null) collection.updateOne(filter, Updates.set("type", type));
 		System.out.println("Produit modifié dans MongoDB !");
 
+	}
+
+	public List<Document> consulterLclients () {
+		MongoCollection<Document> collection = database.getCollection("clients");
+		MongoCursor<Document> cursor = collection.find().iterator();
+		List<Document> clients = new ArrayList<>();
+
+		try {
+			while
+			(cursor.hasNext()) {
+				clients.add(cursor.next());
+			}
+		}finally {
+			cursor.close();
+		}
+
+		return clients;
 	}
 
 	public JTable afficherCommandeClient() {
