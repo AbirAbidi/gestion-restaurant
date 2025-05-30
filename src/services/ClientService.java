@@ -44,10 +44,10 @@ public class ClientService {
 		System.out.println("Client ajouté dans MongoDB !");
 	}
 
-	public void modifierInfo(Client c ,String name, String LastName, Date date_de_naissance, String Email , String adresse, String password ) {
+	public void modifierInfo(String id ,String name, String LastName, Date date_de_naissance, String Email , String adresse, String password ) {
 		MongoCollection<Document> collection = database.getCollection("clients");
 
-		Bson filter = eq("_id", c.getId()); //
+		Bson filter = eq("_id", new ObjectId(id)); //
 
 		if (name != null) collection.updateOne(filter, Updates.set("name", name));
 		if (LastName != null) collection.updateOne(filter, Updates.set("lastName", LastName));

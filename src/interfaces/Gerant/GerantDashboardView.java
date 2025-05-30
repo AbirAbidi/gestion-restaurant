@@ -1,26 +1,31 @@
 package interfaces.Gerant;
 
+import com.mongodb.client.MongoDatabase;
+import interfaces.client.ClientLoginView;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
+import org.bson.Document;
+import services.ClientService;
+import services.GerantService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.Map;
 
 public class GerantDashboardView extends JFrame {
-    // private GerantController gerantController;
-    /**
-     * public GerantDashboardView(GerantController gerantController) {
-     * this.gerantController = gerantController;..
-     * }
-     */
-    public GerantDashboardView() {
+    private  GerantService gerantService;
+    private ClientService clientService;
+    private MongoDatabase database;
+    public GerantDashboardView(MongoDatabase database) {
         // Configuration de base
+        this.database = database;
+        gerantService = new GerantService(database);
+        clientService = new ClientService(database);
         setTitle("Tableau de Bord - Gérant");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        // Créer l'interface
         createUI();
     }
 
@@ -36,15 +41,13 @@ public class GerantDashboardView extends JFrame {
         JPanel statsPanel = new JPanel(new GridLayout(2, 2, 20, 20));
         statsPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
-        // Dans la version avec contrôleur :
-        // int nombreCommandes = gerantController.getNombreCommandes();
-        // double revenusJour = gerantController.getRevenusJour();
-        // int nombreClients = gerantController.getNombreClients();
-        // int nombreProduits = gerantController.getNombreProduits();
-        addStatCard(statsPanel, "Commandes aujourd'hui", "15");
-        addStatCard(statsPanel, "Revenus du jour", "750,50 €");
-        addStatCard(statsPanel, "Clients actifs", "42");
-        addStatCard(statsPanel, "Produits au menu", "28");
+        Map<String, Integer> nbr = gerantService.compterCommandesParStatut();
+        int nbrClient = gerantService.consulterLclients().toArray().length;
+        int nbrProduit = clientService.getTableMenu().length ;
+        addStatCard(statsPanel, "Commandes Non Traitées", String.valueOf(nbr.getOrDefault("NON_TRAITEE", 0)));
+        addStatCard(statsPanel, "Commandes Prêtes", String.valueOf(nbr.getOrDefault("PRETE", 0)));
+        addStatCard(statsPanel, "Nombres de Clients", String.valueOf(nbrClient));
+        addStatCard(statsPanel, "Produits au menu", String.valueOf(nbrProduit));
 
         mainPanel.add(statsPanel, BorderLayout.CENTER);
 
@@ -58,38 +61,20 @@ public class GerantDashboardView extends JFrame {
 
         // Actions des boutons
         produitsButton.addActionListener(e -> {
-            // Dans la version avec contrôleur :
-            // GerantProduitView produitView = new GerantProduitView(gerantController);
-            // produitView.setVisible(true);
-            // dispose();
-
-            // CORRECTION: Ouverture directe de la vue des produits
-            /*GerantProduitView produitView = new GerantProduitView();
-            produitView.setVisible(true);*/
+            GerantProduitView produitView = new GerantProduitView(database);
+            produitView.setVisible(true);
             dispose();
-        }); // CORRECTION: Fermeture de l'accolade du listener
+        });
 
         commandesButton.addActionListener(e -> {
-            // Dans la version avec contrôleur :
-            // GerantCommandeView commandeView = new GerantCommandeView(gerantController);
-            // commandeView.setVisible(true);
-            // dispose();
-
-            // Ouvrir la vue de gestion des commandes
-           // GerantCommandeView commandeView = new GerantCommandeView();
-           // commandeView.setVisible(true);
+            GerantCommandeView commandeView = new GerantCommandeView(database);
+            commandeView.setVisible(true);
             dispose();
         });
 
         clientsButton.addActionListener(e -> {
-            // Dans la version avec contrôleur :
-            // GerantClientView clientView = new GerantClientView(gerantController);
-            // clientView.setVisible(true);
-            // dispose();
-
-            // Ouvrir la vue de gestion des clients
-            /*GerantClientView clientView = new GerantClientView();
-            clientView.setVisible(true);*/
+            GerantClientView clientView = new GerantClientView(database);
+            clientView.setVisible(true);
             dispose();
         });
 
@@ -100,13 +85,13 @@ public class GerantDashboardView extends JFrame {
         // Bouton de déconnexion
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton logoutButton = new CustomButton("Déconnexion", "annuler");
-
-     /*   logoutButton.addActionListener(e -> {
-            // Retour à l'écran de connexion
-            GerantLoginView loginView = new GerantLoginView();
-            loginView.setVisible(true);
+        logoutButton.addActionListener(e -> {
+            ClientLoginView clientLoginView = new ClientLoginView(database);
+            clientLoginView.setVisible(true);
             dispose();
-        });*/
+        });
+
+
 
 
         bottomPanel.add(logoutButton);
@@ -119,7 +104,7 @@ public class GerantDashboardView extends JFrame {
         mainPanel.add(southPanel, BorderLayout.SOUTH);
 
         setContentPane(mainPanel);
-    } // CORRECTION: Ajout de l'accolade fermante pour createUI()
+    }
 
     private void addStatCard(JPanel panel, String title, String value) {
         JPanel card = new JPanel(new BorderLayout(5, 5));

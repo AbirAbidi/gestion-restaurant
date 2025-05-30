@@ -64,7 +64,7 @@ public class GerantProduitView extends JFrame {
         JButton retourButton = new CustomButton("Retour au Dashboard", "annuler");
 
         retourButton.addActionListener(e -> {
-            GerantDashboardView dashboardView = new GerantDashboardView();
+            GerantDashboardView dashboardView = new GerantDashboardView(database);
             dashboardView.setVisible(true);
             dispose();
         });

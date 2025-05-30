@@ -56,7 +56,7 @@ public class GerantClientView extends JFrame {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton retourButton = new CustomButton("Retour au Dashboard", "annuler");
         retourButton.addActionListener(e -> {
-            GerantDashboardView dashboardView = new GerantDashboardView();
+            GerantDashboardView dashboardView = new GerantDashboardView(database);
             dashboardView.setVisible(true);
             dispose();
         });

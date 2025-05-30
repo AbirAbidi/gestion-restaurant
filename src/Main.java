@@ -2,23 +2,12 @@ import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.event.CommandEvent;
-import interfaces.Gerant.GerantClientView;
 import interfaces.Gerant.GerantCommandeView;
 import interfaces.Gerant.GerantDashboardView;
-import interfaces.Gerant.GerantProduitView;
-import interfaces.client.*;
-import interfaces.employe.EmployeCommandeView;
-import interfaces.employe.EmployeDashboardView;
 import org.bson.Document;
-import services.ClientService;
-import services.CommandeService;
 import services.GerantService;
 
 import javax.swing.*;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Properties;
 
 public class Main {
@@ -52,9 +41,8 @@ public class Main {
 
                    /* ClientLoginView clientLoginView = new ClientLoginView(database);
                     clientLoginView.setVisible(true);*/
-                    GerantProduitView gerantProduitView = new GerantProduitView(database);
-                    gerantProduitView.setVisible(true);
-
+                  GerantDashboardView gerantDashboardView = new GerantDashboardView(database);
+                  gerantDashboardView.setVisible(true);
 
                 });
 

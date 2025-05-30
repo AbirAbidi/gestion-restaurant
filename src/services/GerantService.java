@@ -15,8 +15,7 @@ import org.bson.types.ObjectId;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -66,7 +65,7 @@ public class GerantService {
 			System.out.println("Produit supprimé !");
 			return true;
 		} else {
-			System.out.println("Probleme de supprim!.");
+			System.out.println("Probleme de supprim.");
 			return false;
 		}
 	}
@@ -84,22 +83,29 @@ public class GerantService {
 
 	}
 
-	public List<Document> consulterLclients () {
+	public List<Document> consulterLclients() {
 		MongoCollection<Document> collection = database.getCollection("clients");
-		MongoCursor<Document> cursor = collection.find().iterator();
+
+		// Filtre : role = "client" ou role absent/null
+		Document filtre = new Document("$or", Arrays.asList(
+				new Document("role", "client"),
+				new Document("role", new Document("$exists", false))
+		));
+
+		MongoCursor<Document> cursor = collection.find(filtre).iterator();
 		List<Document> clients = new ArrayList<>();
 
 		try {
-			while
-			(cursor.hasNext()) {
+			while (cursor.hasNext()) {
 				clients.add(cursor.next());
 			}
-		}finally {
+		} finally {
 			cursor.close();
 		}
 
 		return clients;
 	}
+
 
 	public JTable afficherCommandeClient() {
 		MongoCollection<Document> collection = database.getCollection("commandes");
@@ -150,10 +156,16 @@ public class GerantService {
 		return table;
 	}
 
-	public void suppprimerCommande(String id) {
+	public boolean suppprimerCommande(String id) {
 		MongoCollection<Document> collection = database.getCollection("commandes");
-		collection.deleteOne(eq("_id", id));
-		System.out.println("Commande supprimée dans MongoDB !");
+		DeleteResult result = collection.deleteOne(eq("_id", new ObjectId(id)));
+		if (result.getDeletedCount() > 0) {
+			System.out.println("Commande supprimé !");
+			return true;
+		} else {
+			System.out.println("Probleme de supprim.");
+			return false;
+		}
 	}
 
 	public String getClientName(String id) {
@@ -161,5 +173,18 @@ public class GerantService {
 		Document doc = collection.find(eq("_id", new ObjectId(id))).first();
 		return doc.getString("name");
 	}
+
+	public Map<String, Integer> compterCommandesParStatut() {
+		MongoCollection<Document> collection = database.getCollection("commandes");
+		Map<String, Integer> resultat = new HashMap<>();
+
+		resultat.put("NON_TRAITEE", (int) collection.countDocuments(Filters.eq("EtatCommande", "NON_TRAITEE")));
+		resultat.put("PRETE", (int) collection.countDocuments(Filters.eq("EtatCommande", "PRETE")));
+		//System.out.println("Commandes par statut: " + resultat);
+		return resultat;
+	}
+
+
+
 
 }
