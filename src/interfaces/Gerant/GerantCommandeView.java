@@ -4,7 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
-import models.Client;
+import models.User;
 import models.Commande;
 import org.bson.Document;
 import org.bson.types.ObjectId;

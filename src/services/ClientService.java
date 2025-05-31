@@ -1,7 +1,8 @@
 package services;
 
 
-import models.Client;
+import com.mongodb.client.result.DeleteResult;
+import models.User;
 import models.Commande;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -9,6 +10,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import models.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -29,7 +31,7 @@ public class ClientService {
 	}
 
 //TODO CHECK BEFORE ADDING IF USER ALREADY EXIST
-	public void creerClient(Client c) {
+	public void creerClient(User c) {
 		MongoCollection<Document> collection = database.getCollection("clients");
 
 		Document doc = new Document()
@@ -58,21 +60,41 @@ public class ClientService {
 		System.out.println("Client modifié dans MongoDB !");
 	}
 
-	public String[] getTableMenu() {
+	public Object[][] getTableMenu() {
 		MongoCollection<Document> collection = database.getCollection("produits");
 		List<Document> documents = collection.find().into(new ArrayList<>());
 
-		String[] data = new String[documents.size()];
+		Object[][] data = new Object[documents.size()][3];
 
 		for (int i = 0; i < documents.size(); i++) {
 			Document doc = documents.get(i);
-			String name = doc.getString("name");
-			Double prix = doc.getDouble("prix");
-			String id = doc.getObjectId("_id").toString();
-			data[i] = name + " - " + prix + " TND" + " - " + id;
+			data[i][0] = doc.getString("name");
+			data[i][1] = doc.getDouble("prix");
+			data[i][2] = doc.getObjectId("_id").toString();
 		}
 		return data;
 	}
+
+	public double getProduitPrice(String name) {
+		MongoCollection<Document> collection = database.getCollection("produits");
+		Bson filter = eq("name", name);
+		Document doc = collection.find(filter).first();
+
+		if (doc != null && doc.containsKey("prix")) {
+			try {
+				return doc.getDouble("prix");
+			} catch (ClassCastException e) {
+				// Si le prix est mal formaté (ex: entier au lieu de double)
+				try {
+					return doc.get("prix") instanceof Number ? ((Number) doc.get("prix")).doubleValue() : 0;
+				} catch (Exception ex) {
+					return 0;
+				}
+			}
+		}
+		return 0; // si le document est null ou ne contient pas "prix"
+	}
+
 
 	public boolean changerMp (String id,String email ,String oldPass ,String nouvelleMp) {
 		MongoCollection<Document> collection = database.getCollection("clients");
@@ -102,20 +124,24 @@ public class ClientService {
 
 	}
 
-	public void modifierCommande (Commande c , Commande.EtatCommande etat_commande , Commande.TypeCommande type_commande  , List<String> produits) {
-	/*	MongoCollection<Document> collection = database.getCollection("commandes");
-		Bson filter = eq("_id", c.getId());
+	public void modifierCommande (String id, Commande.TypeCommande type_commande   ) {
+		MongoCollection<Document> collection = database.getCollection("commandes");
+		Bson filter = eq("_id", new ObjectId(id));
 
-		if (etat_commande != null) collection.updateOne(filter, Updates.set("EtatCommande", etat_commande));
 		if (type_commande != null) collection.updateOne(filter, Updates.set("TypeCommande", type_commande));
-		if (produits != null) collection.updateOne(filter, Updates.set("produits", produits));
-*/
+
 	}
 
-	public void supprimerCommande (String id) {
+	public boolean supprimerCommande (String id) {
 		MongoCollection<Document> collection = database.getCollection("commandes");
-		collection.deleteOne(eq("_id", new ObjectId(id)));
-		System.out.println("commande supprimée dans MongoDB !");
+		DeleteResult result = collection.deleteOne(eq("_id", new ObjectId(id)));
+		if (result.getDeletedCount() > 0) {
+			System.out.println("Commande supprimé !");
+			return true;
+		} else {
+			System.out.println("Proble suppression commande.");
+			return false;
+		}
 
 	}
 

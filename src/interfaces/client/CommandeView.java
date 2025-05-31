@@ -3,12 +3,14 @@ package interfaces.client;
 import com.mongodb.client.MongoDatabase;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
+import models.Commande;
 import services.ClientService;
 import services.GerantService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.prefs.Preferences;
 
 public class CommandeView extends JFrame {
@@ -24,7 +26,7 @@ public class CommandeView extends JFrame {
         this.clientService = new ClientService(database);
         // Configuration de base
         setTitle("Mes Commandes");
-        setSize(700, 500);
+        setSize(700, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         createUI();
@@ -58,40 +60,66 @@ public class CommandeView extends JFrame {
         int etatCol = table.getColumnModel().getColumnIndex("EtatCommande");
         int produitsCol = table.getColumnModel().getColumnIndex("Produits");
         ArrayList<Object[]> commandes  = new ArrayList<>();
-// TODO : add the prize column , its not now cuz the prize is in collection produits only
+        int j = 0 ;
         for (int i = 0; i < table.getRowCount(); i++) {
             String clientIdObj = table.getValueAt(i, clientCol).toString();
             if (clientIdObj != null && clientIdObj.equals(storedId)) {
-                Object[] row = new Object[5];
-                row[0] = i;        // Numéro
-                row[1] = "0 TND";
+                j++;
+                double prix =clientService.getProduitPrice(table.getValueAt(i,produitsCol).toString());
+                Object[] row = new Object[6];
+                row[0] = j;        // Numéro
+                row[1] = prix +" TND";
                 row[2] = table.getValueAt(i, typeCol);      // TypeCommande
                 row[3] = table.getValueAt(i, etatCol);      // EtatCommande
                 row[4] = table.getValueAt(i, produitsCol);  // Produits
+                row[5] = table.getValueAt(i, idCol).toString();
                 commandes.add(row);
             }
         }
-
+        if (commandes.isEmpty()) {
+            JLabel emptyLabel = new JLabel("Aucune commande trouvée.", JLabel.CENTER);
+            emptyLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            emptyLabel.setForeground(Color.GRAY);
+            commandesPanel.setLayout(new BorderLayout());
+            commandesPanel.add(emptyLabel, BorderLayout.CENTER);
+        } else {
         for (Object[] commande : commandes) {
-            JPanel row = new JPanel(new GridLayout(1, 4));
+            JPanel row = new JPanel(new GridLayout(1, 6));
             row.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             JButton supprimerBtn = new JButton("❌");
             supprimerBtn.setForeground(Color.RED);
             supprimerBtn.addActionListener(e -> {
-                String idCommande = table.getValueAt(0, idCol).toString(); // récupérer l'ID réel
+                String idCommande = commande[5].toString();
                 int confirm = JOptionPane.showConfirmDialog(this,
-                        "Supprimer la commande " + idCommande + " ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                        "Supprimer la commande ?" , "Confirmation", JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    clientService.supprimerCommande(idCommande);
-                    dispose();
-                    new CommandeView(database).setVisible(true);
+                    if(clientService.supprimerCommande(idCommande)){
+                        dispose();
+                        CommandeView commandeView = new CommandeView(database);
+                        commandeView.setVisible(true);
+                    }else {
+                        JOptionPane.showConfirmDialog(this,
+                                "Probleme lors la suppression de la commande ?" , "Confirmation", JOptionPane.YES_NO_OPTION);
+                    }
+
                 }
             });
             row.add(supprimerBtn);
             row.add(new JLabel(commande[0].toString(), JLabel.CENTER));
             row.add(new JLabel(commande[1].toString(), JLabel.CENTER));
-            row.add(new JLabel(commande[2].toString(), JLabel.CENTER));
+
+            // Dropdown pour changer le type
+            String[] types = Arrays.stream(Commande.TypeCommande.values()).map(Enum::toString).toArray(String[]::new);
+            JComboBox<String> typeBox = new JComboBox<>(types);
+            typeBox.setSelectedItem(commande[2].toString()); // Type actuel
+            typeBox.addActionListener(e -> {
+                String selectedTypeStr = (String) typeBox.getSelectedItem();
+                Commande.TypeCommande nouveauType = Commande.TypeCommande.valueOf(selectedTypeStr);
+                String idCommande = commande[5].toString();
+                clientService.modifierCommande(idCommande, nouveauType);
+            });
+            row.add(typeBox);
             JLabel statutLabel = new JLabel(commande[3].toString(), JLabel.CENTER);
             String statut = commande[3].toString();
             switch (statut) {
@@ -105,18 +133,34 @@ public class CommandeView extends JFrame {
             commandesPanel.add(row);
             commandesPanel.add(Box.createVerticalStrut(5));
         }
+        }
         JScrollPane scrollPane = new JScrollPane(commandesPanel);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Panneau des boutons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton AjouterProduit = new CustomButton("Ajouter Produit", "valider");
+        JButton AjouterProduit = new CustomButton("Voir le Menu", "valider");
+        JButton modifierInfo = new CustomButton("Modifier vos informations", "valider");
+        JButton logOut = new CustomButton("Deconnexion", "annuler");
+
         AjouterProduit.addActionListener(e -> {
             MenuView menuView = new MenuView(database);
             menuView.setVisible(true);
             dispose();
         });
+        // TODO ADD MODFIER INFO PAGE
+        modifierInfo.addActionListener(e -> {
+
+        });
+        logOut.addActionListener(e -> {
+            dispose();
+            ClientLoginView clientLoginView = new ClientLoginView(database);
+            clientLoginView.setVisible(true);
+
+        });
         buttonPanel.add(AjouterProduit);
+        buttonPanel.add(modifierInfo);
+        buttonPanel.add(logOut);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
         setContentPane(mainPanel);
 

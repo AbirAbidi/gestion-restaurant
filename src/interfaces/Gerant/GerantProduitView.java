@@ -78,20 +78,21 @@ public class GerantProduitView extends JFrame {
 
     private void chargerProduits() {
         produitsPanel.removeAll();
-        String[] produits = clientService.getTableMenu();
 
-        for (String ligne : produits) {
-            String[] parts = ligne.split(" - ");
-            String name = parts[0];
-            String prix = parts[1];
-            String id = parts[2];
+        Object[][] produits = clientService.getTableMenu();
 
-            afficherProduit(name, prix,id);
+        for (Object[] ligne : produits) {
+            String name = (String) ligne[0];
+            String prix = ligne[1].toString();
+            String id = (String) ligne[2];
+
+            afficherProduit(name, prix, id);
         }
 
         produitsPanel.revalidate();
         produitsPanel.repaint();
     }
+
 
     private void afficherProduit(String name , String prix,String id ) {
         JPanel produitPanel = new JPanel(new BorderLayout());

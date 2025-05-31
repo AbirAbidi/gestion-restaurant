@@ -37,32 +37,57 @@ private static MongoDatabase database;
         productsPanel.setLayout(new BoxLayout(productsPanel, BoxLayout.Y_AXIS));
         productsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        String[] products = clientService.getTableMenu();
-        for (String product : products) {
-            JPanel row = new JPanel(new BorderLayout(10, 0));
-            row.add(new JLabel(product), BorderLayout.CENTER);
-            // drop down menu
-            JComboBox<Commande.TypeCommande> typeCommandes = new JComboBox<>(Commande.TypeCommande.values());
-            Commande.TypeCommande selectedType = (Commande.TypeCommande) typeCommandes.getSelectedItem();
-            JPanel panel = new JPanel();
-            panel.add(new JLabel("Type de commande :"));
-            panel.add(typeCommandes);
+        Object[][] products = clientService.getTableMenu();
+        if (products.length == 0) {
+            JLabel emptyLabel = new JLabel("Aucun produit disponible pour le moment.", JLabel.CENTER);
+            emptyLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            emptyLabel.setForeground(Color.GRAY);
+            productsPanel.setLayout(new BorderLayout());
+            productsPanel.add(emptyLabel, BorderLayout.CENTER);
+        } else {
+            for (Object[] product : products) {
+                String name = (String) product[0];
+                Double prix = (Double) product[1];
+                String id = (String) product[2];
 
-            JButton cartButton = new CustomButton("Ajouter", "ajouter");
-            cartButton.addActionListener(e -> {
-                List<String> produitListe = Collections.singletonList(product);
-                Commande commande = new Commande(storedId, Commande.EtatCommande.NON_TRAITEE,selectedType,produitListe);
-                int confirm = JOptionPane.showConfirmDialog(this,
-                        "Passer la commande ?"  , "Confirmation", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    clientService.passerCommande(commande);
-                    dispose();
-                    new CommandeView(database).setVisible(true);
-                }
-            });
-            row.add(cartButton, BorderLayout.EAST);
-            productsPanel.add(row);
-            productsPanel.add(Box.createVerticalStrut(10));
+                JPanel row = new JPanel(new BorderLayout(10, 0));
+
+                // Texte du produit
+                JLabel nameLabel = new JLabel(name + " - " + prix + " TND");
+                row.add(nameLabel, BorderLayout.CENTER);
+
+                // Dropdown TypeCommande
+                JComboBox<Commande.TypeCommande> typeCommandes = new JComboBox<>(Commande.TypeCommande.values());
+
+                // Panel pour type + bouton
+                JPanel panelRight = new JPanel();
+                panelRight.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+                panelRight.add(new JLabel("Type :"));
+                panelRight.add(typeCommandes);
+
+                JButton cartButton = new CustomButton("Ajouter", "ajouter");
+                cartButton.addActionListener(e -> {
+                    Commande.TypeCommande selectedType = (Commande.TypeCommande) typeCommandes.getSelectedItem();
+                    Commande commande = new Commande(storedId, Commande.EtatCommande.NON_TRAITEE, selectedType, name);
+
+                    int confirm = JOptionPane.showConfirmDialog(this,
+                            "Passer la commande ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        clientService.passerCommande(commande);
+                        dispose();
+                        new CommandeView(database).setVisible(true);
+                    }
+                });
+
+                panelRight.add(cartButton);
+
+                row.add(panelRight, BorderLayout.EAST);
+
+                productsPanel.add(row);
+                productsPanel.add(Box.createVerticalStrut(10));
+            }
         }
 
         JScrollPane scrollPane = new JScrollPane(productsPanel);
@@ -72,19 +97,17 @@ private static MongoDatabase database;
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JButton panierButton = new CustomButton("Voir Panier", "valider");
-        JButton retourButton = new CustomButton("Retour", "annuler");
+
         JButton commandesButton = new CustomButton("Mes Commandes", "modifier");
 
 
-        retourButton.addActionListener(e -> {
-           /* ClientLoginView loginView = new ClientLoginView();
-            loginView.setVisible(true);*/
+        commandesButton.addActionListener(e -> {
+            CommandeView commandeView = new CommandeView(database);
+            commandeView.setVisible(true);
             dispose();
         });
 
-        buttonPanel.add(panierButton);
-        buttonPanel.add(retourButton);
+
         buttonPanel.add(commandesButton);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);

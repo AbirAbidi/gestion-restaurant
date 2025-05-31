@@ -3,7 +3,7 @@ package services;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
-import models.Client;
+import models.User;
 import models.Commande;
 import models.Produit;
 import com.mongodb.client.MongoCollection;
@@ -114,34 +114,20 @@ public class GerantService {
 		try {
 			// Use find() to retrieve all documents
 			MongoCursor<Document> cursor = collection.find().iterator();
-			int docCount = 0;
 
-			while (cursor.hasNext()) {
+            while (cursor.hasNext()) {
 				Document doc = cursor.next();
-				docCount++;
-				//System.out.println("Processing document #" + docCount + ": " + doc.toJson());
 
-				try {
-					ObjectId objectId = doc.getObjectId("_id");
-					String id = objectId != null ? objectId.toString() : "Unknown ID";
-
+                try {
+					String Id = doc.getObjectId("_id").toString();
 					String client = doc.getString("client");
 					String typeCommande = doc.getString("TypeCommande");
 					String etatCommande = doc.getString("EtatCommande");
+					String produits = doc.getString("produits");
 
-					String produitsStr = "";
-					try {
-						List<String> produits = (List<String>) doc.get("produits");
-						if (produits != null && !produits.isEmpty()) {
-							produitsStr = String.join(", ", produits);
-						}
-					} catch (ClassCastException e) {
-						System.err.println("Error casting Produits to List<String>: " + e.getMessage());
-						Object produitsObj = doc.get("produits");
-					}
 
 					// Add row to table model
-					model.addRow(new Object[]{id, client, typeCommande, etatCommande, produitsStr});
+					model.addRow(new Object[]{Id, client, typeCommande, etatCommande, produits});
 					//System.out.println(produitsStr);
 				} catch (Exception e) {
 					e.printStackTrace();

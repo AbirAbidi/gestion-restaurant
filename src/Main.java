@@ -4,6 +4,9 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import interfaces.Gerant.GerantCommandeView;
 import interfaces.Gerant.GerantDashboardView;
+import interfaces.client.ClientLoginView;
+import interfaces.client.CommandeView;
+import interfaces.client.MenuView;
 import org.bson.Document;
 import services.GerantService;
 
@@ -39,10 +42,9 @@ public class Main {
                 SwingUtilities.invokeLater(() -> {
 
 
-                   /* ClientLoginView clientLoginView = new ClientLoginView(database);
-                    clientLoginView.setVisible(true);*/
-                  GerantDashboardView gerantDashboardView = new GerantDashboardView(database);
-                  gerantDashboardView.setVisible(true);
+                   ClientLoginView clientLoginView = new ClientLoginView(database);
+                    clientLoginView.setVisible(true);
+
 
                 });
 

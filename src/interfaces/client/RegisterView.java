@@ -3,7 +3,7 @@ import com.mongodb.client.MongoDatabase;
 import interfaces.Gerant.GerantCommandeView;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
-import models.Client;
+import models.User;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -106,7 +106,7 @@ public class RegisterView extends JFrame {
 
             Date dateNaissance = (Date) dateSpinner.getValue();
 
-            Client client1 = new Client(nomField.getText(), prenomField.getText(),dateNaissance,emailField.getText(),adresseField.getText(),new String(passwordField.getPassword()));
+            User client1 = new User(nomField.getText(), prenomField.getText(),dateNaissance,emailField.getText(),adresseField.getText(),new String(passwordField.getPassword()));
             clientService.creerClient(client1);
             // Retourner à l'écran de connexion
             ClientLoginView loginView = new ClientLoginView(database);

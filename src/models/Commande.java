@@ -17,9 +17,9 @@ public class Commande {
 	private String id_client ;
 	private EtatCommande etat_commande ;
 	private TypeCommande type_commande ; 
-	private List<String> produits ; // what is there in the command
+	private String produits ; // what is there in the command
 	
-	public Commande(String id_client , EtatCommande etat_commande ,  TypeCommande type_commande  ,List<String> produits) {
+	public Commande(String id_client , EtatCommande etat_commande ,  TypeCommande type_commande  ,String produits) {
 		this.id_client = id_client;
 		this.etat_commande = EtatCommande.NON_TRAITEE;
 		this.type_commande = type_commande;
@@ -51,11 +51,11 @@ public class Commande {
 		this.type_commande = type_commande;
 	}
 
-	public List<String> getProduits() {
+	public String getProduits() {
 		return produits;
 	}
 
-	public void setProduits(List<String> produits) {
+	public void setProduits(String produits) {
 		this.produits = produits;
 	}
 

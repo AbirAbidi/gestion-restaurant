@@ -4,10 +4,9 @@ import org.bson.types.ObjectId;
 
 import java.util.Date;
 
-public class Client {
+public class User {
 
 
-	private ObjectId id;
 	private String name;
 	private String LastName;
 	private Date date_de_naissance;
@@ -17,7 +16,7 @@ public class Client {
 	final String role ;
 
 	
-	public Client( String name,String LastName,Date date_de_naissance,String Email ,String adresse, String password ) {
+	public User( String name,String LastName,Date date_de_naissance,String Email ,String adresse, String password ) {
 		this.name = name;
 		this.LastName = LastName;
 		this.date_de_naissance = date_de_naissance;
@@ -27,16 +26,6 @@ public class Client {
 		this.role = "Client";
 	}
 
-
-
-
-	public ObjectId getId() {
-		return id;
-	}
-
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
 
 
 	public String getName() {

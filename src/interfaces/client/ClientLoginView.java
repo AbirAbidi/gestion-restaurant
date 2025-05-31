@@ -1,6 +1,7 @@
 package interfaces.client;
 import com.mongodb.client.MongoDatabase;
 import interfaces.Gerant.GerantCommandeView;
+import interfaces.Gerant.GerantDashboardView;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
 import org.bson.types.ObjectId;
@@ -72,13 +73,17 @@ public class ClientLoginView extends JFrame {
             Preferences prefs = Preferences.userRoot().node("Ids"); // this right here is for local storage using prefernces api in java ( 9rina local storage f frontend)
             prefs.put("userID", userID.toString());
             if (Objects.equals(role, "Gerant")){ // no it's not chat here it was ==  but then i get this recom form the IDE to handle null results so i tab tab tab
-                GerantCommandeView gerantCommandeView = new GerantCommandeView(database);
-                gerantCommandeView.setVisible(true);
+                GerantDashboardView gerantDashboardView = new GerantDashboardView(database);
+                gerantDashboardView.setVisible(true);
+                dispose();
             }else{
                // JOptionPane.showMessageDialog(this, "Connexion réussie (simulation)");
             CommandeView commandeView = new CommandeView(database);
             commandeView.setVisible(true);
+            dispose();
             }
+        }else {
+            JOptionPane.showMessageDialog(this, "Mot de passe incorrect ou utilisateur non valide");
         }
     });
         registerButton.addActionListener(e -> ouvrirInscription());
@@ -94,7 +99,6 @@ public class ClientLoginView extends JFrame {
     private void ouvrirInscription() {
         RegisterView registerView = new RegisterView(database);
         registerView.setVisible(true);
-
         this.dispose();
     }
     private void changeMpView() {
