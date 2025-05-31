@@ -4,6 +4,7 @@ import com.mongodb.client.MongoDatabase;
 import interfaces.components.HeaderPanel;
 import interfaces.components.CustomButton;
 import org.bson.Document;
+import services.ClientService;
 import services.GerantService;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.util.List;
 public class GerantClientView extends JFrame {
 
     private GerantService gerantService;
+    private ClientService clientService;
     private JPanel clientsPanel;
     private static MongoDatabase database;
 
@@ -20,6 +22,7 @@ public class GerantClientView extends JFrame {
 
         GerantClientView.database = database ;
         this.gerantService = new GerantService(database);
+        this.clientService = new ClientService(database);
         setTitle("Gestion des Clients");
         setSize(700, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -82,7 +85,8 @@ public class GerantClientView extends JFrame {
 
 
         JPanel boutonsPanel = new JPanel();
-        JButton supprimerButton = new CustomButton("Supprimer", "supprimer");
+        JComboBox<String> changerRole = new JComboBox<>(new String[] {"Client", "Gerant"});
+        JButton supprimerButton = new CustomButton("Supprimer", "modifier");
         supprimerButton.addActionListener(e -> {
             int choix = JOptionPane.showConfirmDialog(this,
                     "Supprimer le client " + name + ' '+ lastName + " ?",
@@ -100,7 +104,18 @@ public class GerantClientView extends JFrame {
                 }
             }
         });
+        changerRole.addActionListener(e -> {
+            String selectedRole = (String) changerRole.getSelectedItem();
 
+            boolean success = gerantService.changerRoleUtilisateur(clientService.idUser(email), selectedRole);
+            if (success) {
+                JOptionPane.showMessageDialog(null, "Rôle mis à jour avec succès !");
+            } else {
+                JOptionPane.showMessageDialog(null, "Erreur lors de la mise à jour du rôle.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        boutonsPanel.add(changerRole);
         boutonsPanel.add(supprimerButton);
         clientPanel.add(boutonsPanel, BorderLayout.EAST);
 

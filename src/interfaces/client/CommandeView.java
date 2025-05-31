@@ -148,9 +148,9 @@ public class CommandeView extends JFrame {
             menuView.setVisible(true);
             dispose();
         });
-        // TODO ADD MODFIER INFO PAGE
         modifierInfo.addActionListener(e -> {
-
+            ClientProfileView clientProfileView = new ClientProfileView(database);
+            clientProfileView.setVisible(true);
         });
         logOut.addActionListener(e -> {
             dispose();

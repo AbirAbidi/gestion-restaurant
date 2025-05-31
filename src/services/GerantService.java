@@ -170,6 +170,23 @@ public class GerantService {
 		return resultat;
 	}
 
+	public boolean changerRoleUtilisateur(String userId, String nouveauRole) {
+
+		try {
+			MongoCollection<Document> collection = database.getCollection("clients");
+			Bson filter = eq("_id", new ObjectId(userId));
+			Bson update = Updates.set("role", nouveauRole);
+
+			collection.updateOne(filter, update);
+			System.out.println("Rôle mis à jour dans MongoDB !");
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
 
 
 

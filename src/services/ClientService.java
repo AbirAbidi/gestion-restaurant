@@ -46,19 +46,24 @@ public class ClientService {
 		System.out.println("Client ajouté dans MongoDB !");
 	}
 
-	public void modifierInfo(String id ,String name, String LastName, Date date_de_naissance, String Email , String adresse, String password ) {
-		MongoCollection<Document> collection = database.getCollection("clients");
+	public boolean modifierInfo(String id, String name, String lastName, String email, String adresse) {
+		try {
+			MongoCollection<Document> collection = database.getCollection("clients");
+			Bson filter = eq("_id", new ObjectId(id));
 
-		Bson filter = eq("_id", new ObjectId(id)); //
+			if (name != null ) collection.updateOne(filter, Updates.set("name", name));
+			if (lastName != null) collection.updateOne(filter, Updates.set("lastName", lastName));
+			if (email != null) collection.updateOne(filter, Updates.set("email", email));
+			if (adresse != null) collection.updateOne(filter, Updates.set("adresse", adresse));
 
-		if (name != null) collection.updateOne(filter, Updates.set("name", name));
-		if (LastName != null) collection.updateOne(filter, Updates.set("lastName", LastName));
-		if (date_de_naissance != null) collection.updateOne(filter, Updates.set("dateNaissance", date_de_naissance));
-		if (Email != null) collection.updateOne(filter, Updates.set("email", Email));
-		if (adresse != null) collection.updateOne(filter, Updates.set("adresse", adresse));
-		if (password != null) collection.updateOne(filter, Updates.set("password", password));
-		System.out.println("Client modifié dans MongoDB !");
+			System.out.println("Client modifié dans MongoDB !");
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
+
 
 	public Object[][] getTableMenu() {
 		MongoCollection<Document> collection = database.getCollection("produits");
@@ -143,22 +148,6 @@ public class ClientService {
 			return false;
 		}
 
-	}
-
-	public Commande.EtatCommande SuivieCommande(String id) {
-		MongoCollection<Document> collection = database.getCollection("commandes");
-		Bson filter = eq("_id", new ObjectId(id));
-
-		Document doc = collection.find(filter).first();
-
-		if (doc != null) {
-			String etatStr = doc.getString("EtatCommande");
-			if (etatStr != null) {
-				return Commande.EtatCommande.valueOf(etatStr);
-			}
-		}
-
-		return null;
 	}
 
 	public boolean signin(String email, String password) {

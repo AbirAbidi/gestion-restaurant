@@ -5,6 +5,7 @@ import com.mongodb.client.MongoDatabase;
 import interfaces.Gerant.GerantCommandeView;
 import interfaces.Gerant.GerantDashboardView;
 import interfaces.client.ClientLoginView;
+import interfaces.client.ClientProfileView;
 import interfaces.client.CommandeView;
 import interfaces.client.MenuView;
 import org.bson.Document;
